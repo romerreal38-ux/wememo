@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>weMemo — CHMSC-Alijis</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1e2530;
+    --border: #2a3341;
+    --accent: #00c896;
+    --accent2: #0099ff;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --text: #e6edf3;
+    --muted: #7d8fa3;
+    --card: #1a2234;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Sora',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  /* ── LOGIN ── */
+  #loginScreen {
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background: radial-gradient(ellipse at 60% 40%, rgba(0,200,150,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(0,153,255,0.06) 0%, transparent 50%), var(--bg);
+  }
+  .login-box {
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    padding:40px; width:400px; animation: fadeUp 0.4s ease;
+  }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  .login-logo { font-family:'Space Mono',monospace; font-size:28px; font-weight:700; color:var(--accent); margin-bottom:4px; }
+  .login-logo span { color:var(--text); }
+  .login-sub { font-size:12px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-bottom:32px; }
+  .login-title { font-size:18px; font-weight:600; margin-bottom:6px; }
+  .login-desc { font-size:13px; color:var(--muted); margin-bottom:24px; }
+  .form-group { margin-bottom:16px; }
+  .form-label { display:block; font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:6px; }
+  .form-input {
+    width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:8px;
+    padding:11px 14px; font-size:13.5px; color:var(--text); font-family:'Sora',sans-serif; outline:none; transition:border-color .15s;
+  }
+  .form-input:focus { border-color:var(--accent); }
+  .btn { padding:10px 20px; border-radius:8px; font-size:13.5px; font-family:'Sora',sans-serif; font-weight:600; cursor:pointer; border:none; transition:all .15s; }
+  .btn-primary { background:var(--accent); color:#000; width:100%; margin-top:8px; }
+  .btn-primary:hover { background:#00dfa6; }
+  .btn-ghost { background:transparent; border:1px solid var(--border); color:var(--text); }
+  .btn-ghost:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-sm { padding:7px 14px; font-size:12px; border-radius:6px; }
+  .btn-danger { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:var(--danger); }
+  .btn-danger:hover { background:rgba(239,68,68,0.2); }
+  .btn-edit { background:rgba(0,153,255,0.1); border:1px solid rgba(0,153,255,0.3); color:var(--accent2); }
+  .btn-edit:hover { background:rgba(0,153,255,0.2); }
+  .action-btns { display:flex; gap:6px; }
+  .user-avatar-cell { display:flex; align-items:center; gap:10px; }
+  .user-avatar-sm { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2)); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#000; flex-shrink:0; }
+  .role-badge { font-size:10px; padding:2px 8px; border-radius:20px; font-weight:600; letter-spacing:.5px; text-transform:capitalize; }
+  .role-admin { background:rgba(239,68,68,.12); color:var(--danger); }
+  .role-faculty { background:rgba(0,200,150,.1); color:var(--accent); }
+  .role-gass { background:rgba(0,153,255,.1); color:var(--accent2); }
+  .role-dean { background:rgba(245,158,11,.1); color:var(--warn); }
+  .modal-lg { width:640px; }
+  .user-stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px; }
+  .user-stat { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:12px; text-align:center; }
+  .user-stat-val { font-family:'Space Mono',monospace; font-size:20px; font-weight:700; color:var(--accent); }
+  .user-stat-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
+  .divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
+  .error-msg { color:var(--danger); font-size:12px; margin-top:8px; min-height:18px; }
+  .login-toggle { text-align:center; margin-top:16px; font-size:13px; color:var(--muted); }
+  .login-toggle a { color:var(--accent); cursor:pointer; text-decoration:none; }
+
+  /* ── APP SHELL ── */
+  #appScreen { display:none; }
+  .shell { display:flex; min-height:100vh; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width:240px; background:var(--surface); border-right:1px solid var(--border);
+    display:flex; flex-direction:column; position:fixed; height:100vh; overflow-y:auto; z-index:50;
+  }
+  .logo { padding:22px 20px; border-bottom:1px solid var(--border); }
+  .logo-mark { font-family:'Space Mono',monospace; font-size:22px; font-weight:700; color:var(--accent); letter-spacing:-1px; }
+  .logo-mark span { color:var(--text); }
+  .logo-sub { font-size:10px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-top:2px; }
+  .nav { padding:12px 0; flex:1; }
+  .nav-label { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:8px 20px 4px; }
+  .nav-item {
+    display:flex; align-items:center; gap:10px; padding:10px 20px; font-size:13.5px;
+    color:var(--muted); cursor:pointer; border-left:3px solid transparent; transition:all .15s;
+  }
+  .nav-item:hover { color:var(--text); background:var(--surface2); }
+  .nav-item.active { color:var(--accent); border-left-color:var(--accent); background:rgba(0,200,150,0.06); }
+  .nav-item .icon { font-size:15px; width:20px; text-align:center; }
+  .badge { margin-left:auto; background:var(--accent); color:#000; font-size:10px; font-weight:700; padding:1px 7px; border-radius:20px; font-family:'Space Mono',monospace; }
+  .badge.warn { background:var(--warn); }
+  .user-card { padding:14px 20px; border-top:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+  .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2)); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#000; flex-shrink:0; }
+  .user-info { overflow:hidden; flex:1; min-width:0; }
+  .user-name { font-size:12px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .user-role { font-size:11px; color:var(--muted); text-transform:capitalize; }
+  .signout-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:14px; padding:2px; }
+  .signout-btn:hover { color:var(--danger); }
+
+  /* ── MAIN ── */
+  .main { margin-left:240px; flex:1; display:flex; flex-direction:column; min-height:100vh; }
+  .topbar {
+    background:var(--surface); border-bottom:1px solid var(--border); padding:15px 32px;
+    display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10;
+  }
+  .page-title { font-size:17px; font-weight:600; }
+  .page-title span { color:var(--muted); font-weight:400; font-size:13px; margin-left:8px; }
+  .topbar-actions { display:flex; gap:10px; }
+  .content { padding:28px 32px; flex:1; }
+
+  /* ── VIEWS ── */
+  .view { display:none; }
+  .view.active { display:block; animation:fadeUp .25s ease; }
+
+  /* ── STATS ── */
+  .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+  .stat-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px; position:relative; overflow:hidden; }
+  .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+  .stat-card.green::before { background:var(--accent); }
+  .stat-card.blue::before { background:var(--accent2); }
+  .stat-card.warn::before { background:var(--warn); }
+  .stat-card.red::before { background:var(--danger); }
+  .stat-label { font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:6px; }
+  .stat-value { font-family:'Space Mono',monospace; font-size:26px; font-weight:700; }
+  .stat-value.green { color:var(--accent); } .stat-value.blue { color:var(--accent2); }
+  .stat-value.warn { color:var(--warn); } .stat-value.red { color:var(--danger); }
+  .stat-sub { font-size:11px; color:var(--muted); margin-top:4px; }
+
+  /* ── TABLE ── */
+  .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .section-title { font-size:14px; font-weight:600; }
+  .table-wrap { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:24px; }
+  .search-bar { padding:12px 14px; border-bottom:1px solid var(--border); display:flex; gap:10px; flex-wrap:wrap; }
+  .search-input { flex:1; min-width:160px; background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:8px 12px; font-size:13px; color:var(--text); font-family:'Sora',sans-serif; outline:none; }
+  .search-input:focus { border-color:var(--accent); }
+  .search-input::placeholder { color:var(--muted); }
+  .select-filter { background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:8px 12px; font-size:13px; color:var(--text); font-family:'Sora',sans-serif; outline:none; cursor:pointer; }
+  table { width:100%; border-collapse:collapse; }
+  thead th { padding:10px 14px; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); text-align:left; border-bottom:1px solid var(--border); font-weight:500; }
+  tbody tr { border-bottom:1px solid var(--border); transition:background .1s; }
+  tbody tr:last-child { border-bottom:none; }
+  tbody tr.clickable { cursor:pointer; }
+  tbody tr.clickable:hover { background:var(--surface2); }
+  td { padding:12px 14px; font-size:13px; }
+  .empty-row td { text-align:center; color:var(--muted); padding:32px; font-size:13px; }
+
+  /* ── PILLS / TAGS ── */
+  .status-pill { display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:600; letter-spacing:.4px; }
+  .status-pill::before { content:''; width:5px; height:5px; border-radius:50%; }
+  .pill-sent { background:rgba(0,200,150,.12); color:var(--accent); } .pill-sent::before { background:var(--accent); }
+  .pill-pending { background:rgba(245,158,11,.12); color:var(--warn); } .pill-pending::before { background:var(--warn); }
+  .pill-draft { background:rgba(125,143,163,.12); color:var(--muted); } .pill-draft::before { background:var(--muted); }
+  .priority-tag { font-size:10px; padding:2px 7px; border-radius:4px; font-weight:700; letter-spacing:.5px; }
+  .p-high { background:rgba(239,68,68,.15); color:var(--danger); }
+  .p-med { background:rgba(245,158,11,.12); color:var(--warn); }
+  .p-low { background:rgba(0,200,150,.1); color:var(--accent); }
+  .read-rate { font-family:'Space Mono',monospace; font-size:12px; }
+
+  /* ── DETAIL PANEL ── */
+  .panel-overlay { position:fixed; inset:0; z-index:99; display:none; }
+  .panel-overlay.open { display:block; }
+  .detail-panel {
+    position:fixed; top:0; right:0; width:500px; height:100vh;
+    background:var(--surface); border-left:1px solid var(--border); z-index:100;
+    transform:translateX(100%); transition:transform .25s ease;
+    display:flex; flex-direction:column; overflow-y:auto;
+  }
+  .detail-panel.open { transform:translateX(0); }
+  .panel-header { padding:18px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:var(--surface); z-index:1; }
+  .panel-title { font-size:15px; font-weight:600; flex:1; margin-right:12px; }
+  .close-btn { width:28px; height:28px; border-radius:6px; background:var(--surface2); border:1px solid var(--border); color:var(--muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
+  .close-btn:hover { color:var(--text); }
+  .panel-body { padding:22px; flex:1; }
+  .meta-row { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:18px; }
+  .meta-item { display:flex; flex-direction:column; gap:3px; }
+  .meta-key { font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); }
+  .meta-val { font-size:13px; }
+  .memo-body-text { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:14px; font-size:13px; line-height:1.7; margin-bottom:18px; }
+  .ack-title, .feedback-title { font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:10px; }
+  .ack-list { display:flex; flex-direction:column; gap:6px; margin-bottom:18px; }
+  .ack-row { display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--surface2); border-radius:6px; font-size:12px; }
+  .ack-avatar { width:26px; height:26px; border-radius:50%; background:var(--surface); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; flex-shrink:0; border:1px solid var(--border); }
+  .ack-name { flex:1; }
+  .ack-read { color:var(--accent); font-size:11px; } .ack-unread { color:var(--muted); font-size:11px; }
+  .feedback-item { background:var(--surface2); border-radius:8px; padding:12px; margin-bottom:8px; border-left:3px solid var(--accent2); }
+  .feedback-meta { font-size:11px; color:var(--muted); margin-bottom:4px; }
+  .feedback-text { font-size:13px; line-height:1.5; }
+  .feedback-reply { margin-top:8px; padding:8px 10px; background:rgba(0,200,150,.05); border-radius:6px; border-left:3px solid var(--accent); font-size:12px; color:var(--muted); }
+  .feedback-reply strong { color:var(--accent); }
+  .reply-input-row { display:flex; gap:8px; margin-top:6px; }
+  .reply-input { flex:1; background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:7px 10px; font-size:12px; color:var(--text); font-family:'Sora',sans-serif; outline:none; }
+  .reply-input:focus { border-color:var(--accent); }
+  .compose-bar { display:flex; gap:8px; margin-top:14px; }
+  .compose-input { flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:9px 12px; font-size:13px; color:var(--text); font-family:'Sora',sans-serif; outline:none; }
+  .compose-input:focus { border-color:var(--accent2); }
+  .ack-btn { width:100%; margin-bottom:16px; background:rgba(0,200,150,.1); border:1px solid rgba(0,200,150,.3); color:var(--accent); border-radius:8px; padding:10px; font-size:13px; font-weight:600; cursor:pointer; font-family:'Sora',sans-serif; transition:all .15s; }
+  .ack-btn:hover { background:rgba(0,200,150,.2); }
+  .ack-btn:disabled { opacity:.5; cursor:default; }
+
+  /* ── COMPOSE MODAL ── */
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:200; display:none; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--surface); border:1px solid var(--border); border-radius:12px; width:580px; max-height:90vh; overflow-y:auto; animation:fadeUp .2s ease; }
+  .modal-header { padding:18px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .modal-title { font-size:15px; font-weight:600; }
+  .modal-body { padding:22px; }
+  .form-textarea { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:7px; padding:10px 14px; font-size:13.5px; color:var(--text); font-family:'Sora',sans-serif; outline:none; transition:border-color .15s; resize:vertical; min-height:110px; line-height:1.6; }
+  .form-textarea:focus { border-color:var(--accent); }
+  .form-select { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:7px; padding:10px 14px; font-size:13.5px; color:var(--text); font-family:'Sora',sans-serif; outline:none; }
+  .form-select:focus { border-color:var(--accent); }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .recipients-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+  .recipient-check { display:flex; align-items:center; gap:8px; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:6px; cursor:pointer; font-size:13px; transition:all .1s; }
+  .recipient-check:hover { border-color:var(--accent); }
+  .recipient-check input { accent-color:var(--accent); }
+  .modal-footer { padding:14px 22px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; gap:10px; }
+
+  /* ── NOTIFICATIONS ── */
+  .notif-item { display:flex; gap:12px; padding:14px 16px; border-bottom:1px solid var(--border); }
+  .notif-item:last-child { border-bottom:none; }
+  .notif-icon { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .notif-icon.green { background:rgba(0,200,150,.12); } .notif-icon.blue { background:rgba(0,153,255,.12); } .notif-icon.warn { background:rgba(245,158,11,.12); }
+  .notif-content { flex:1; }
+  .notif-text { font-size:13px; line-height:1.5; }
+  .notif-time { font-size:11px; color:var(--muted); margin-top:2px; font-family:'Space Mono',monospace; }
+
+  /* ── INBOX ── */
+  .inbox-item { display:flex; align-items:flex-start; gap:12px; padding:14px 16px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .1s; }
+  .inbox-item:last-child { border-bottom:none; }
+  .inbox-item:hover { background:var(--surface2); }
+  .inbox-item.unread { background:rgba(0,200,150,.02); }
+  .unread-dot { width:7px; height:7px; border-radius:50%; background:var(--accent); flex-shrink:0; margin-top:5px; }
+  .read-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+  .inbox-body { flex:1; }
+  .inbox-from { font-size:13px; font-weight:600; margin-bottom:2px; }
+  .inbox-subject { font-size:13px; margin-bottom:2px; }
+  .inbox-preview { font-size:12px; color:var(--muted); }
+  .inbox-meta { display:flex; flex-direction:column; align-items:flex-end; gap:5px; flex-shrink:0; }
+  .inbox-date { font-size:11px; color:var(--muted); font-family:'Space Mono',monospace; }
+
+  /* ── LOADING ── */
+  .loading { display:flex; align-items:center; justify-content:center; padding:40px; color:var(--muted); font-size:13px; gap:10px; }
+  .spinner { width:18px; height:18px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .6s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* ── TOAST ── */
+  .toast { position:fixed; bottom:24px; right:24px; background:var(--surface); border:1px solid var(--accent); color:var(--text); padding:11px 16px; border-radius:8px; font-size:13px; z-index:999; display:flex; align-items:center; gap:9px; opacity:0; transform:translateY(8px); transition:all .2s; pointer-events:none; max-width:320px; }
+  .toast.show { opacity:1; transform:translateY(0); }
+  .toast.error { border-color:var(--danger); }
+  .toast-icon { font-size:15px; flex-shrink:0; }
+
+  ::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:transparent; } ::-webkit-scrollbar-thumb { background:var(--border); border-radius:10px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">we<span>Memo</span></div>
+    <div class="login-sub">CHMSC-Alijis Campus</div>
+
+    <!-- SIGN IN FORM -->
+    <div id="signinForm">
+      <div class="login-title">Welcome back</div>
+      <div class="login-desc">Sign in to access the memorandum system.</div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" type="email" id="signinEmail" placeholder="you@chmsc.edu.ph" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="signinPassword" placeholder="••••••••" id="signinPasswordInput" />
+      </div>
+      <div class="error-msg" id="signinError"></div>
+      <button class="btn btn-primary" id="signinBtn">Sign In</button>
+      <div class="login-toggle">Don't have an account? <a id="goToSignup">Register</a></div>
+    </div>
+
+    <!-- SIGN UP FORM -->
+    <div id="signupForm" style="display:none">
+      <div class="login-title">Create account</div>
+      <div class="login-desc">Register to receive and manage memorandums.</div>
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input class="form-input" type="text" id="signupName" placeholder="e.g. Dr. Maria Santos" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" type="email" id="signupEmail" placeholder="you@chmsc.edu.ph" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number (for SMS)</label>
+        <input class="form-input" type="text" id="signupPhone" placeholder="09XXXXXXXXX" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Role</label>
+        <select class="form-input form-select" id="signupRole">
+          <option value="faculty">Faculty</option>
+          <option value="gass">GASS Personnel</option>
+          <option value="dean">Dean / Director</option>
+          <option value="admin">Administrator</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Department</label>
+        <input class="form-input" type="text" id="signupDept" placeholder="e.g. College of Education" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="signupPassword" placeholder="Min. 6 characters" />
+      </div>
+      <div class="error-msg" id="signupError"></div>
+      <button class="btn btn-primary" id="signupBtn">Create Account</button>
+      <div class="login-toggle">Already have an account? <a id="goToSignin">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     APP SCREEN
+══════════════════════════════════════ -->
+<div id="appScreen">
+  <div class="shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-mark">we<span>Memo</span></div>
+        <div class="logo-sub">CHMSC-Alijis</div>
+      </div>
+      <nav class="nav">
+        <div class="nav-label">Main</div>
+        <div class="nav-item active" id="nav-dashboard" data-view="dashboard">
+          <span class="icon">📊</span> Dashboard
+        </div>
+        <div class="nav-item" id="nav-inbox" data-view="inbox">
+          <span class="icon">📥</span> Inbox
+          <span class="badge warn" id="inboxBadge" style="display:none">0</span>
+        </div>
+        <div class="nav-item admin-only" id="nav-memos" data-view="memos">
+          <span class="icon">📄</span> All Memos
+        </div>
+        <div class="nav-label admin-only">Management</div>
+        <div class="nav-item admin-only" id="nav-recipients" data-view="recipients">
+          <span class="icon">👥</span> Recipients
+        </div>
+        <div class="nav-item" id="nav-notifications" data-view="notifications">
+          <span class="icon">🔔</span> Notifications
+        </div>
+        <div class="nav-item admin-only" id="nav-reports" data-view="reports">
+          <span class="icon">📈</span> Reports
+        </div>
+      </nav>
+      <div class="user-card">
+        <div class="avatar" id="sidebarAvatar">?</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebarName">Loading...</div>
+          <div class="user-role" id="sidebarRole">—</div>
+        </div>
+        <button class="signout-btn" id="signoutBtn" title="Sign out">⎋</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div class="topbar">
+        <div class="page-title" id="pageTitle">Dashboard <span>Overview</span></div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost btn-sm admin-only" id="openComposeBtn">+ New Memo</button>
+        </div>
+      </div>
+
+      <div class="content">
+
+        <!-- DASHBOARD -->
+        <div class="view active" id="view-dashboard">
+          <div class="stats-row">
+            <div class="stat-card green"><div class="stat-label">Total Memos</div><div class="stat-value green" id="statTotal">—</div><div class="stat-sub">All time</div></div>
+            <div class="stat-card blue"><div class="stat-label">Sent</div><div class="stat-value blue" id="statSent">—</div><div class="stat-sub">Successfully dispatched</div></div>
+            <div class="stat-card warn"><div class="stat-label">Pending Ack.</div><div class="stat-value warn" id="statPending">—</div><div class="stat-sub">Awaiting read receipt</div></div>
+            <div class="stat-card red"><div class="stat-label">Open Feedback</div><div class="stat-value red" id="statFeedback">—</div><div class="stat-sub">Needs response</div></div>
+          </div>
+          <div class="section-header">
+            <div class="section-title">Recent Memos</div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Subject</th><th>Date</th><th>Priority</th><th>Status</th><th>Read Rate</th></tr></thead>
+              <tbody id="dashboardMemoTable"><tr><td colspan="5" class="empty-row"><div class="loading"><div class="spinner"></div> Loading...</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- INBOX -->
+        <div class="view" id="view-inbox">
+          <div class="table-wrap" id="inboxList">
+            <div class="loading"><div class="spinner"></div> Loading...</div>
+          </div>
+        </div>
+
+        <!-- ALL MEMOS (admin) -->
+        <div class="view" id="view-memos">
+          <div class="table-wrap">
+            <div class="search-bar">
+              <input class="search-input" placeholder="Search by subject..." id="memoSearch" />
+              <select class="select-filter" id="memoStatusFilter" id="memoStatusFilter">
+                <option value="">All Status</option>
+                <option>Sent</option><option>Pending</option><option>Draft</option>
+              </select>
+              <select class="select-filter" id="memoPriorityFilter" id="memoPriorityFilter">
+                <option value="">All Priority</option>
+                <option>High</option><option>Medium</option><option>Low</option>
+              </select>
+            </div>
+            <table>
+              <thead><tr><th>Ref No.</th><th>Subject</th><th>Category</th><th>Date</th><th>Priority</th><th>Status</th><th>Read Rate</th></tr></thead>
+              <tbody id="allMemosTable"><tr><td colspan="7" class="empty-row"><div class="loading"><div class="spinner"></div> Loading...</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- RECIPIENTS (admin) -->
+        <div class="view" id="view-recipients">
+          <div class="stats-row" id="userStatsRow">
+            <div class="stat-card green"><div class="stat-label">Total Users</div><div class="stat-value green" id="uStatTotal">—</div><div class="stat-sub">Registered accounts</div></div>
+            <div class="stat-card blue"><div class="stat-label">Faculty</div><div class="stat-value blue" id="uStatFaculty">—</div><div class="stat-sub">Teaching staff</div></div>
+            <div class="stat-card warn"><div class="stat-label">GASS Personnel</div><div class="stat-value warn" id="uStatGass">—</div><div class="stat-sub">Support staff</div></div>
+            <div class="stat-card red"><div class="stat-label">Admins</div><div class="stat-value red" id="uStatAdmin">—</div><div class="stat-sub">System administrators</div></div>
+          </div>
+          <div class="section-header" style="margin-bottom:14px">
+            <div class="section-title">All Users <span id="userCount" style="color:var(--muted);font-weight:400;font-size:12px"></span></div>
+            <button class="btn btn-primary btn-sm">+ Add User</button>
+          </div>
+          <div class="table-wrap">
+            <div class="search-bar">
+              <input class="search-input" placeholder="Search by name, email or department..." id="recipientSearch" />
+              <select class="select-filter" id="recipientRoleFilter" id="recipientRoleFilter">
+                <option value="">All Roles</option>
+                <option value="faculty">Faculty</option>
+                <option value="gass">GASS Personnel</option>
+                <option value="admin">Administrator</option>
+                <option value="dean">Dean / Director</option>
+              </select>
+            </div>
+            <table>
+              <thead><tr><th>Name</th><th>Role</th><th>Department</th><th>Phone</th><th>Email</th><th>Actions</th></tr></thead>
+              <tbody id="recipientsTable"><tr><td colspan="6" class="empty-row"><div class="loading"><div class="spinner"></div> Loading...</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- NOTIFICATIONS -->
+        <div class="view" id="view-notifications">
+          <div class="table-wrap" id="notifList">
+            <div class="loading"><div class="spinner"></div> Loading...</div>
+          </div>
+        </div>
+
+        <!-- REPORTS (admin) -->
+        <div class="view" id="view-reports">
+          <div class="stats-row">
+            <div class="stat-card green"><div class="stat-label">Avg. Read Rate</div><div class="stat-value green" id="reportAvgRead">—</div><div class="stat-sub">Across sent memos</div></div>
+            <div class="stat-card blue"><div class="stat-label">Total Recipients</div><div class="stat-value blue" id="reportRecipients">—</div><div class="stat-sub">Registered users</div></div>
+            <div class="stat-card warn"><div class="stat-label">Total Feedbacks</div><div class="stat-value warn" id="reportFeedbacks">—</div><div class="stat-sub">All time</div></div>
+            <div class="stat-card red"><div class="stat-label">Unanswered</div><div class="stat-value red" id="reportUnanswered">—</div><div class="stat-sub">Feedback without reply</div></div>
+          </div>
+          <div class="section-title" style="margin-bottom:12px">Memo Report</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Memo</th><th>Sent To</th><th>Acknowledged</th><th>Read Rate</th><th>Feedbacks</th></tr></thead>
+              <tbody id="reportTable"><tr><td colspan="5" class="empty-row"><div class="loading"><div class="spinner"></div> Loading...</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- DETAIL PANEL -->
+<div class="panel-overlay" id="panelOverlay" id="closePanelBtn"></div>
+<div class="detail-panel" id="detailPanel">
+  <div class="panel-header">
+    <div class="panel-title" id="panelTitle">Memo Details</div>
+    <div class="close-btn">×</div>
+  </div>
+  <div class="panel-body" id="panelBody">
+    <div class="loading"><div class="spinner"></div> Loading...</div>
+  </div>
+</div>
+
+<!-- COMPOSE MODAL -->
+<div class="modal-overlay" id="composeModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">📄 Compose New Memo</div>
+      <div class="close-btn" id="closeComposeBtn">×</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Subject / Title</label>
+        <input class="form-input" id="composeSubject" placeholder="Enter memo subject..." />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="composeCategory">
+            <option>Academic</option><option>General</option><option>HR / Policy</option><option>Finance</option><option>Events</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Priority</label>
+          <select class="form-select" id="composePriority">
+            <option>Low</option><option selected>Medium</option><option>High</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Memo Content</label>
+        <textarea class="form-textarea" id="composeContent" placeholder="Write the memo content here..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Send To (select recipient groups)</label>
+        <div class="recipients-grid">
+          <label class="recipient-check"><input type="checkbox" id="rcpt-faculty" checked> 🎓 Faculty</label>
+          <label class="recipient-check"><input type="checkbox" id="rcpt-gass" checked> 🏢 GASS Personnel</label>
+          <label class="recipient-check"><input type="checkbox" id="rcpt-dean"> 📋 Dean / Director</label>
+          <label class="recipient-check"><input type="checkbox" id="rcpt-admin"> ⚙️ Admin Staff</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" id="saveDraftBtn">Save as Draft</button>
+      <button class="btn btn-primary btn-sm" id="sendMemoBtn">Send Memo</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD USER MODAL -->
+<div class="modal-overlay" id="addUserModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title">👤 Add New User</div>
+      <div class="close-btn" id="closeAddUserBtn">×</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input class="form-input" id="addName" placeholder="e.g. Dr. Maria Santos" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role</label>
+          <select class="form-select" id="addRole">
+            <option value="faculty">Faculty</option>
+            <option value="gass">GASS Personnel</option>
+            <option value="dean">Dean / Director</option>
+            <option value="admin">Administrator</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Department</label>
+          <input class="form-input" id="addDept" placeholder="e.g. College of Education" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone (for SMS)</label>
+          <input class="form-input" type="text" id="addPhone" placeholder="09XXXXXXXXX" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" id="addEmail" placeholder="user@chmsc.edu.ph" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Temporary Password</label>
+          <input class="form-input" type="text" id="addPassword" value="WeMemo2026" />
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:-8px;margin-bottom:14px">⚠️ Share this temporary password with the user. They can change it after logging in.</div>
+      <div class="error-msg" id="addUserError"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="addUserBtn">Create User</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT USER MODAL -->
+<div class="modal-overlay" id="editUserModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title">✏️ Edit User</div>
+      <div class="close-btn" id="closeEditUserBtn">×</div>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editUserId" />
+      <!-- User Stats -->
+      <div class="user-stats-row" id="editUserStats">
+        <div class="user-stat"><div class="user-stat-val" id="editStatMemos">—</div><div class="user-stat-label">Memos Received</div></div>
+        <div class="user-stat"><div class="user-stat-val" id="editStatRead">—</div><div class="user-stat-label">Acknowledged</div></div>
+        <div class="user-stat"><div class="user-stat-val" id="editStatFeedbacks">—</div><div class="user-stat-label">Feedbacks Sent</div></div>
+      </div>
+      <hr class="divider" />
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input class="form-input" id="editName" placeholder="Full name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role</label>
+          <select class="form-select" id="editRole">
+            <option value="faculty">Faculty</option>
+            <option value="gass">GASS Personnel</option>
+            <option value="dean">Dean / Director</option>
+            <option value="admin">Administrator</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Department</label>
+          <input class="form-input" id="editDept" placeholder="Department" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input class="form-input" id="editPhone" placeholder="09XXXXXXXXX" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" id="editEmail" placeholder="Email" disabled style="opacity:.5;cursor:not-allowed" />
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Email cannot be changed here. Contact Supabase admin to update.</div>
+      </div>
+      <hr class="divider" />
+      <div class="form-group">
+        <label class="form-label">Reset Password (optional)</label>
+        <input class="form-input" id="editPassword" type="text" placeholder="Leave blank to keep current password" />
+      </div>
+      <div class="error-msg" id="editUserError"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger btn-sm" id="confirmDeleteBtn">🗑 Delete User</button>
+      <div style="flex:1"></div>
+      <button class="btn btn-ghost btn-sm">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="editUserBtn">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span class="toast-icon" id="toastIcon">✅</span><span id="toastMsg">Done!</span></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+// ══════════════════════════════════════
+// SUPABASE INIT
+// ══════════════════════════════════════
+const SUPABASE_URL = 'https://bmkzhjbshjjqdjzrnwua.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJta3poamJzaGpqcWRqenJud3VhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMTE3OTEsImV4cCI6MjA4Nzg4Nzc5MX0.s-p5xZGmgYwrTLe1aW37RjOOQmYFORLIO4xLJHn0MiY';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let currentUser = null;
+let currentProfile = null;
+let allMemos = [];
+let allRecipients = [];
+let currentMemoId = null;
+
+// ══════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════
+function toggleForm(form) {
+  document.getElementById('signinForm').style.display = form === 'signin' ? 'block' : 'none';
+  document.getElementById('signupForm').style.display = form === 'signup' ? 'block' : 'none';
+}
+
+async function signIn() {
+  const email = document.getElementById('signinEmail').value.trim();
+  const password = document.getElementById('signinPassword').value;
+  const errEl = document.getElementById('signinError');
+  const btn = document.getElementById('signinBtn');
+  errEl.textContent = '';
+  if (!email || !password) { errEl.textContent = 'Please fill in all fields.'; return; }
+  btn.textContent = 'Signing in...'; btn.disabled = true;
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  btn.textContent = 'Sign In'; btn.disabled = false;
+  if (error) { errEl.textContent = error.message; return; }
+  await loadApp(data.user);
+}
+
+async function signUp() {
+  const name = document.getElementById('signupName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const phone = document.getElementById('signupPhone').value.trim();
+  const role = document.getElementById('signupRole').value;
+  const dept = document.getElementById('signupDept').value.trim();
+  const password = document.getElementById('signupPassword').value;
+  const errEl = document.getElementById('signupError');
+  const btn = document.getElementById('signupBtn');
+  errEl.textContent = '';
+  if (!name || !email || !password) { errEl.textContent = 'Name, email and password are required.'; return; }
+  if (password.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
+  btn.textContent = 'Creating account...'; btn.disabled = true;
+  const { data, error } = await sb.auth.signUp({
+    email, password,
+    options: { data: { full_name: name, role, phone_number: phone, department: dept } }
+  });
+  btn.textContent = 'Create Account'; btn.disabled = false;
+  if (error) { errEl.textContent = error.message; return; }
+  // Update profile with phone/dept since trigger only gets name/role/email
+  if (data.user) {
+    await sb.from('profiles').update({ phone_number: phone, department: dept }).eq('id', data.user.id);
+    await loadApp(data.user);
+  }
+}
+
+async function signOut() {
+  await sb.auth.signOut();
+  currentUser = null; currentProfile = null;
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  showToast('Signed out successfully.', '👋');
+}
+
+// ══════════════════════════════════════
+// APP INIT
+// ══════════════════════════════════════
+async function loadApp(user) {
+  currentUser = user;
+  // Fetch profile
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  currentProfile = profile;
+
+  // Update sidebar
+  const initials = (profile?.full_name || 'U').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('sidebarAvatar').textContent = initials;
+  document.getElementById('sidebarName').textContent = profile?.full_name || user.email;
+  document.getElementById('sidebarRole').textContent = profile?.role || 'user';
+
+  // Show/hide admin elements
+  const isAdmin = profile?.role === 'admin';
+  document.querySelectorAll('.admin-only').forEach(el => {
+    el.style.display = isAdmin ? '' : 'none';
+  });
+
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
+
+  // Load data
+  await Promise.all([loadDashboard(), loadInbox()]);
+  if (isAdmin) { loadAllMemos(); loadRecipients(); loadReports(); }
+  loadNotifications();
+}
+
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+const pageTitles = {
+  dashboard: ['Dashboard','Overview'],
+  inbox: ['Inbox','Your memos'],
+  memos: ['All Memos','Full registry'],
+  recipients: ['Recipients','Faculty & Personnel'],
+  notifications: ['Notifications','Activity feed'],
+  reports: ['Reports','Tracking & analytics'],
+};
+function showView(name, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const t = pageTitles[name];
+  document.getElementById('pageTitle').innerHTML = t[0] + ' <span>' + t[1] + '</span>';
+}
+
+// ══════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════
+async function loadDashboard() {
+  const isAdmin = currentProfile?.role === 'admin';
+  let memosQuery;
+  if (isAdmin) {
+    const { data } = await sb.from('memos').select('*').order('created_at', { ascending: false }).limit(5);
+    allMemos = data || [];
+  } else {
+    // Get memos this user is a recipient of
+    const { data: recData } = await sb.from('memo_recipients').select('memo_id').eq('user_id', currentUser.id);
+    const memoIds = (recData || []).map(r => r.memo_id);
+    if (memoIds.length > 0) {
+      const { data } = await sb.from('memos').select('*').in('id', memoIds).order('created_at', { ascending: false }).limit(5);
+      allMemos = data || [];
+    } else { allMemos = []; }
+  }
+
+  // Stats
+  if (isAdmin) {
+    const { count: total } = await sb.from('memos').select('*', { count: 'exact', head: true });
+    const { count: sent } = await sb.from('memos').select('*', { count: 'exact', head: true }).eq('status', 'Sent');
+    const { count: ackCount } = await sb.from('acknowledgements').select('*', { count: 'exact', head: true });
+    const { count: fbCount } = await sb.from('feedbacks').select('*', { count: 'exact', head: true }).is('reply', null);
+    const { count: rcptTotal } = await sb.from('memo_recipients').select('*', { count: 'exact', head: true });
+    document.getElementById('statTotal').textContent = total || 0;
+    document.getElementById('statSent').textContent = sent || 0;
+    document.getElementById('statPending').textContent = Math.max(0, (rcptTotal||0) - (ackCount||0));
+    document.getElementById('statFeedback').textContent = fbCount || 0;
+  } else {
+    const { count: myTotal } = await sb.from('memo_recipients').select('*', { count: 'exact', head: true }).eq('user_id', currentUser.id);
+    const { count: myRead } = await sb.from('acknowledgements').select('*', { count: 'exact', head: true }).eq('user_id', currentUser.id);
+    const unread = Math.max(0, (myTotal||0) - (myRead||0));
+    document.getElementById('statTotal').textContent = myTotal || 0;
+    document.getElementById('statSent').textContent = myRead || 0;
+    document.getElementById('statPending').textContent = unread;
+    document.getElementById('statFeedback').textContent = '—';
+    document.getElementById('inboxBadge').textContent = unread;
+    document.getElementById('inboxBadge').style.display = unread > 0 ? '' : 'none';
+  }
+
+  renderMemoTable('dashboardMemoTable', allMemos, isAdmin ? 5 : 5);
+}
+
+function renderMemoTable(tbodyId, memos, cols) {
+  const tbody = document.getElementById(tbodyId);
+  if (!memos || memos.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="' + (cols||7) + '" class="empty-row">No memos found.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = memos.map(m => {
+    const date = new Date(m.created_at).toLocaleDateString('en-PH', { month:'short', day:'numeric', year:'numeric' });
+    const pClass = m.priority === 'High' ? 'p-high' : m.priority === 'Medium' ? 'p-med' : 'p-low';
+    const sClass = m.status === 'Sent' ? 'pill-sent' : m.status === 'Pending' ? 'pill-pending' : 'pill-draft';
+    const refNo = tbodyId === 'allMemosTable'
+      ? `<td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">${m.ref_number || '—'}</td>` : '';
+    const cat = tbodyId === 'allMemosTable' ? `<td>${m.category}</td>` : '';
+    return `<tr class="clickable">
+      ${refNo}
+      <td>${m.subject}</td>
+      ${cat}
+      <td>${date}</td>
+      <td><span class="priority-tag ${pClass}">${(m.priority||'').toUpperCase().slice(0,3)}</span></td>
+      <td><span class="status-pill ${sClass}">${m.status}</span></td>
+      <td><span class="read-rate" id="rate-${m.id}">...</span></td>
+    </tr>`;
+  }).join('');
+  // Load read rates async
+  memos.forEach(m => loadReadRate(m.id));
+}
+
+async function loadReadRate(memoId) {
+  const [{ count: sent }, { count: acked }] = await Promise.all([
+    sb.from('memo_recipients').select('*', { count:'exact', head:true }).eq('memo_id', memoId),
+    sb.from('acknowledgements').select('*', { count:'exact', head:true }).eq('memo_id', memoId)
+  ]);
+  document.querySelectorAll(`#rate-${memoId}`).forEach(el => {
+    el.textContent = `${acked||0} / ${sent||0}`;
+  });
+}
+
+// ══════════════════════════════════════
+// INBOX
+// ══════════════════════════════════════
+async function loadInbox() {
+  const { data: recData } = await sb.from('memo_recipients').select('memo_id').eq('user_id', currentUser.id);
+  const memoIds = (recData || []).map(r => r.memo_id);
+  const { data: ackData } = await sb.from('acknowledgements').select('memo_id').eq('user_id', currentUser.id);
+  const ackedIds = new Set((ackData||[]).map(a => a.memo_id));
+
+  let memos = [];
+  if (memoIds.length > 0) {
+    const { data } = await sb.from('memos').select('*, profiles!memos_created_by_fkey(full_name)').in('id', memoIds).order('created_at', { ascending: false });
+    memos = data || [];
+  }
+
+  const inboxEl = document.getElementById('inboxList');
+  if (memos.length === 0) { inboxEl.innerHTML = '<div style="padding:32px;text-align:center;color:var(--muted);font-size:13px">No memos in your inbox yet.</div>'; return; }
+
+  inboxEl.innerHTML = memos.map(m => {
+    const isRead = ackedIds.has(m.id);
+    const date = new Date(m.created_at).toLocaleDateString('en-PH', { month:'short', day:'numeric' });
+    const pClass = m.priority === 'High' ? 'p-high' : m.priority === 'Medium' ? 'p-med' : 'p-low';
+    const from = m.profiles?.full_name || 'Admin Office';
+    return `<div class="inbox-item ${isRead ? '' : 'unread'}">
+      <div class="${isRead ? 'read-dot' : 'unread-dot'}"></div>
+      <div class="inbox-body">
+        <div class="inbox-from">${from}</div>
+        <div class="inbox-subject">${m.subject}</div>
+        <div class="inbox-preview">${(m.content||'').slice(0,80)}...</div>
+      </div>
+      <div class="inbox-meta">
+        <div class="inbox-date">${date}</div>
+        <span class="priority-tag ${pClass}">${(m.priority||'').toUpperCase().slice(0,3)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════
+// ALL MEMOS
+// ══════════════════════════════════════
+async function loadAllMemos() {
+  const { data } = await sb.from('memos').select('*').order('created_at', { ascending: false });
+  allMemos = data || [];
+  renderMemoTable('allMemosTable', allMemos, 7);
+}
+
+function filterMemos() {
+  const search = document.getElementById('memoSearch').value.toLowerCase();
+  const status = document.getElementById('memoStatusFilter').value;
+  const priority = document.getElementById('memoPriorityFilter').value;
+  const filtered = allMemos.filter(m =>
+    (!search || m.subject.toLowerCase().includes(search)) &&
+    (!status || m.status === status) &&
+    (!priority || m.priority === priority)
+  );
+  renderMemoTable('allMemosTable', filtered, 7);
+}
+
+// ══════════════════════════════════════
+// RECIPIENTS / USER CRUD
+// ══════════════════════════════════════
+async function loadRecipients() {
+  const { data } = await sb.from('profiles').select('*').order('full_name');
+  allRecipients = data || [];
+  renderRecipients(allRecipients);
+  updateUserStats(allRecipients);
+}
+
+function updateUserStats(list) {
+  document.getElementById('uStatTotal').textContent = list.length;
+  document.getElementById('uStatFaculty').textContent = list.filter(u => u.role === 'faculty').length;
+  document.getElementById('uStatGass').textContent = list.filter(u => u.role === 'gass').length;
+  document.getElementById('uStatAdmin').textContent = list.filter(u => u.role === 'admin').length;
+  document.getElementById('userCount').textContent = `(${list.length} users)`;
+}
+
+function getRoleBadge(role) {
+  const cls = { admin:'role-admin', faculty:'role-faculty', gass:'role-gass', dean:'role-dean' }[role] || 'role-faculty';
+  const label = { admin:'Admin', faculty:'Faculty', gass:'GASS', dean:'Dean' }[role] || role;
+  return `<span class="role-badge ${cls}">${label}</span>`;
+}
+
+function renderRecipients(list) {
+  const tbody = document.getElementById('recipientsTable');
+  if (!list.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty-row">No users found.</td></tr>'; return; }
+  tbody.innerHTML = list.map(p => {
+    const initials = (p.full_name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    return `<tr>
+      <td><div class="user-avatar-cell"><div class="user-avatar-sm">${initials}</div><div><div style="font-weight:600;font-size:13px">${p.full_name}</div></div></div></td>
+      <td>${getRoleBadge(p.role)}</td>
+      <td style="color:var(--muted);font-size:12px">${p.department || '—'}</td>
+      <td style="font-size:12px">${p.phone_number || '—'}</td>
+      <td style="font-size:12px;color:var(--muted)">${p.email || '—'}</td>
+      <td><div class="action-btns">
+        <button class="btn btn-edit btn-sm">Edit</button>
+        <button class="btn btn-danger btn-sm"\'")}')">Delete</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+function filterRecipients() {
+  const search = document.getElementById('recipientSearch').value.toLowerCase();
+  const role = document.getElementById('recipientRoleFilter').value;
+  const filtered = allRecipients.filter(p =>
+    (!search || p.full_name.toLowerCase().includes(search) ||
+     (p.department||'').toLowerCase().includes(search) ||
+     (p.email||'').toLowerCase().includes(search)) &&
+    (!role || p.role === role)
+  );
+  renderRecipients(filtered);
+}
+
+// ── CREATE ──
+function openAddUser() {
+  document.getElementById('addUserError').textContent = '';
+  ['addName','addEmail','addPhone','addDept'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('addPassword').value = 'WeMemo2026';
+  document.getElementById('addRole').value = 'faculty';
+  document.getElementById('addUserModal').classList.add('open');
+}
+function closeAddUser() { document.getElementById('addUserModal').classList.remove('open'); }
+
+async function addUser() {
+  const name = document.getElementById('addName').value.trim();
+  const email = document.getElementById('addEmail').value.trim();
+  const phone = document.getElementById('addPhone').value.trim();
+  const role = document.getElementById('addRole').value;
+  const dept = document.getElementById('addDept').value.trim();
+  const password = document.getElementById('addPassword').value.trim();
+  const errEl = document.getElementById('addUserError');
+  const btn = document.getElementById('addUserBtn');
+  errEl.textContent = '';
+  if (!name || !email || !password) { errEl.textContent = 'Name, email and password are required.'; return; }
+  if (password.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
+  btn.textContent = 'Creating...'; btn.disabled = true;
+  const { data, error } = await sb.auth.signUp({ email, password, options: { data: { full_name: name, role } } });
+  if (error) { errEl.textContent = error.message; btn.textContent = 'Create User'; btn.disabled = false; return; }
+  if (data.user) {
+    await sb.from('profiles').update({ full_name: name, role, department: dept, phone_number: phone, email }).eq('id', data.user.id);
+  }
+  btn.textContent = 'Create User'; btn.disabled = false;
+  closeAddUser();
+  showToast(`${name} created! Temp password: ${password}`, '👤');
+  loadRecipients();
+}
+
+// ── READ / EDIT ──
+async function openEditUser(userId) {
+  const profile = allRecipients.find(p => p.id === userId);
+  if (!profile) return;
+  document.getElementById('editUserId').value = userId;
+  document.getElementById('editName').value = profile.full_name || '';
+  document.getElementById('editEmail').value = profile.email || '';
+  document.getElementById('editPhone').value = profile.phone_number || '';
+  document.getElementById('editDept').value = profile.department || '';
+  document.getElementById('editRole').value = profile.role || 'faculty';
+  document.getElementById('editPassword').value = '';
+  document.getElementById('editUserError').textContent = '';
+  document.getElementById('editStatMemos').textContent = '...';
+  document.getElementById('editStatRead').textContent = '...';
+  document.getElementById('editStatFeedbacks').textContent = '...';
+  document.getElementById('editUserModal').classList.add('open');
+  // Load user stats async
+  const [{ count: memos }, { count: acked }, { count: fbs }] = await Promise.all([
+    sb.from('memo_recipients').select('*',{count:'exact',head:true}).eq('user_id', userId),
+    sb.from('acknowledgements').select('*',{count:'exact',head:true}).eq('user_id', userId),
+    sb.from('feedbacks').select('*',{count:'exact',head:true}).eq('user_id', userId),
+  ]);
+  document.getElementById('editStatMemos').textContent = memos || 0;
+  document.getElementById('editStatRead').textContent = acked || 0;
+  document.getElementById('editStatFeedbacks').textContent = fbs || 0;
+}
+function closeEditUser() { document.getElementById('editUserModal').classList.remove('open'); }
+
+// ── UPDATE ──
+async function saveEditUser() {
+  const userId = document.getElementById('editUserId').value;
+  const name = document.getElementById('editName').value.trim();
+  const phone = document.getElementById('editPhone').value.trim();
+  const dept = document.getElementById('editDept').value.trim();
+  const role = document.getElementById('editRole').value;
+  const newPass = document.getElementById('editPassword').value.trim();
+  const errEl = document.getElementById('editUserError');
+  const btn = document.getElementById('editUserBtn');
+  errEl.textContent = '';
+  if (!name) { errEl.textContent = 'Name is required.'; return; }
+  btn.textContent = 'Saving...'; btn.disabled = true;
+  const { error } = await sb.from('profiles').update({ full_name: name, role, department: dept, phone_number: phone }).eq('id', userId);
+  if (error) { errEl.textContent = error.message; btn.textContent = 'Save Changes'; btn.disabled = false; return; }
+  btn.textContent = 'Save Changes'; btn.disabled = false;
+  closeEditUser();
+  showToast(`${name} updated successfully.`, '✅');
+  loadRecipients();
+}
+
+// ── DELETE ──
+let pendingDeleteId = null;
+let pendingDeleteName = null;
+function confirmDeleteUser() {
+  const userId = document.getElementById('editUserId').value;
+  const name = document.getElementById('editName').value;
+  closeEditUser();
+  deleteUser(userId, name);
+}
+async function deleteUser(userId, userName) {
+  if (!confirm(`Are you sure you want to remove ${userName}? This will delete their profile and cannot be undone.`)) return;
+  const { error } = await sb.from('profiles').delete().eq('id', userId);
+  if (error) { showToast('Failed: ' + error.message, '❌', true); return; }
+  showToast(`${userName} removed from system.`, '🗑️');
+  loadRecipients();
+}
+
+
+
+// ══════════════════════════════════════
+// NOTIFICATIONS
+// ══════════════════════════════════════
+async function loadNotifications() {
+  let notifs = [];
+  // Fetch acknowledgements
+  const { data: acks } = await sb.from('acknowledgements')
+    .select('*, profiles!acknowledgements_user_id_fkey(full_name), memos(subject)')
+    .order('acknowledged_at', { ascending: false }).limit(10);
+  // Fetch feedbacks
+  const { data: fbs } = await sb.from('feedbacks')
+    .select('*, profiles!feedbacks_user_id_fkey(full_name), memos(subject)')
+    .order('created_at', { ascending: false }).limit(10);
+
+  const notifEl = document.getElementById('notifList');
+  if ((!acks || !acks.length) && (!fbs || !fbs.length)) {
+    notifEl.innerHTML = '<div style="padding:32px;text-align:center;color:var(--muted);font-size:13px">No notifications yet.</div>';
+    return;
+  }
+
+  // Merge and sort
+  const combined = [
+    ...(acks||[]).map(a => ({ type:'ack', name: a.profiles?.full_name, memo: a.memos?.subject, time: a.acknowledged_at })),
+    ...(fbs||[]).map(f => ({ type:'feedback', name: f.profiles?.full_name, memo: f.memos?.subject, time: f.created_at }))
+  ].sort((a,b) => new Date(b.time) - new Date(a.time)).slice(0,15);
+
+  notifEl.innerHTML = combined.map(n => {
+    const timeStr = timeAgo(n.time);
+    if (n.type === 'ack') return `<div class="notif-item">
+      <div class="notif-icon green">✅</div>
+      <div class="notif-content">
+        <div class="notif-text"><strong>${n.name}</strong> acknowledged <strong>"${n.memo}"</strong></div>
+        <div class="notif-time">${timeStr}</div>
+      </div></div>`;
+    return `<div class="notif-item">
+      <div class="notif-icon blue">💬</div>
+      <div class="notif-content">
+        <div class="notif-text"><strong>${n.name}</strong> sent feedback on <strong>"${n.memo}"</strong></div>
+        <div class="notif-time">${timeStr}</div>
+      </div></div>`;
+  }).join('');
+}
+
+function timeAgo(dateStr) {
+  const diff = Date.now() - new Date(dateStr);
+  const m = Math.floor(diff/60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return m + ' mins ago';
+  const h = Math.floor(m/60);
+  if (h < 24) return h + ' hrs ago';
+  return Math.floor(h/24) + ' days ago';
+}
+
+// ══════════════════════════════════════
+// REPORTS
+// ══════════════════════════════════════
+async function loadReports() {
+  const { data: memos } = await sb.from('memos').select('*').eq('status', 'Sent');
+  const { count: totalRecipients } = await sb.from('profiles').select('*', { count:'exact', head:true });
+  const { count: totalFeedbacks } = await sb.from('feedbacks').select('*', { count:'exact', head:true });
+  const { count: unanswered } = await sb.from('feedbacks').select('*', { count:'exact', head:true }).is('reply', null);
+
+  document.getElementById('reportRecipients').textContent = totalRecipients || 0;
+  document.getElementById('reportFeedbacks').textContent = totalFeedbacks || 0;
+  document.getElementById('reportUnanswered').textContent = unanswered || 0;
+
+  const tbody = document.getElementById('reportTable');
+  if (!memos || !memos.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty-row">No sent memos yet.</td></tr>'; document.getElementById('reportAvgRead').textContent = '0%'; return; }
+
+  let totalRate = 0;
+  const rows = await Promise.all(memos.map(async m => {
+    const [{ count: sent }, { count: acked }, { count: fbs }] = await Promise.all([
+      sb.from('memo_recipients').select('*', { count:'exact', head:true }).eq('memo_id', m.id),
+      sb.from('acknowledgements').select('*', { count:'exact', head:true }).eq('memo_id', m.id),
+      sb.from('feedbacks').select('*', { count:'exact', head:true }).eq('memo_id', m.id),
+    ]);
+    const rate = sent ? Math.round((acked/sent)*100) : 0;
+    totalRate += rate;
+    return `<tr><td>${m.subject}</td><td>${sent||0}</td><td>${acked||0}</td><td><span class="read-rate">${rate}%</span></td><td>${fbs||0}</td></tr>`;
+  }));
+  tbody.innerHTML = rows.join('');
+  document.getElementById('reportAvgRead').textContent = Math.round(totalRate / memos.length) + '%';
+}
+
+// ══════════════════════════════════════
+// DETAIL PANEL
+// ══════════════════════════════════════
+async function openPanel(memoId) {
+  currentMemoId = memoId;
+  document.getElementById('detailPanel').classList.add('open');
+  document.getElementById('panelOverlay').classList.add('open');
+  document.getElementById('panelBody').innerHTML = '<div class="loading"><div class="spinner"></div> Loading...</div>';
+
+  // Fetch memo
+  const { data: memo } = await sb.from('memos').select('*, profiles!memos_created_by_fkey(full_name)').eq('id', memoId).single();
+  if (!memo) { document.getElementById('panelBody').innerHTML = '<p style="color:var(--muted)">Memo not found.</p>'; return; }
+
+  document.getElementById('panelTitle').textContent = memo.subject;
+
+  // Fetch ack status for this user
+  const { data: myAck } = await sb.from('acknowledgements').select('id').eq('memo_id', memoId).eq('user_id', currentUser.id).maybeSingle();
+  const hasAcked = !!myAck;
+
+  // Fetch all acks for this memo
+  const { data: acks } = await sb.from('acknowledgements').select('user_id, acknowledged_at, profiles(full_name)').eq('memo_id', memoId);
+  const ackedUserIds = new Set((acks||[]).map(a => a.user_id));
+
+  // Fetch recipients
+  const { data: rcpts } = await sb.from('memo_recipients').select('user_id, profiles(full_name)').eq('memo_id', memoId);
+
+  // Fetch feedbacks
+  const { data: feedbacks } = await sb.from('feedbacks').select('*, profiles!feedbacks_user_id_fkey(full_name)').eq('memo_id', memoId).order('created_at');
+
+  const isAdmin = currentProfile?.role === 'admin';
+  const date = new Date(memo.created_at).toLocaleDateString('en-PH', { year:'numeric', month:'long', day:'numeric' });
+  const pClass = memo.priority === 'High' ? 'p-high' : memo.priority === 'Medium' ? 'p-med' : 'p-low';
+  const sClass = memo.status === 'Sent' ? 'pill-sent' : memo.status === 'Pending' ? 'pill-pending' : 'pill-draft';
+
+  // Auto-acknowledge when opening if recipient and not yet acked
+  if (!isAdmin && !hasAcked && memo.status === 'Sent') {
+    await sb.from('acknowledgements').insert({ memo_id: memoId, user_id: currentUser.id });
+    loadInbox(); loadDashboard();
+  }
+
+  const ackRows = (rcpts||[]).map(r => {
+    const read = ackedUserIds.has(r.user_id);
+    const initials = (r.profiles?.full_name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    return `<div class="ack-row">
+      <div class="ack-avatar">${initials}</div>
+      <div class="ack-name">${r.profiles?.full_name || 'Unknown'}</div>
+      <div class="ack-status ${read ? 'ack-read' : 'ack-unread'}">${read ? '✅ Read' : '⏳ Pending'}</div>
+    </div>`;
+  }).join('');
+
+  const feedbackRows = (feedbacks||[]).map(f => {
+    const time = new Date(f.created_at).toLocaleDateString('en-PH', { month:'short', day:'numeric', year:'numeric' });
+    const replyHtml = f.reply
+      ? `<div class="feedback-reply"><strong>Admin:</strong> ${f.reply}</div>`
+      : isAdmin ? `<div class="reply-input-row">
+          <input class="reply-input" id="reply-${f.id}" placeholder="Type your reply..." />
+          <button class="btn btn-ghost btn-sm">Reply</button>
+        </div>` : '';
+    return `<div class="feedback-item">
+      <div class="feedback-meta">${f.profiles?.full_name} · ${time}</div>
+      <div class="feedback-text">${f.message}</div>
+      ${replyHtml}
+    </div>`;
+  }).join('');
+
+  document.getElementById('panelBody').innerHTML = `
+    <div class="meta-row">
+      <div class="meta-item"><div class="meta-key">Date</div><div class="meta-val">${date}</div></div>
+      <div class="meta-item"><div class="meta-key">Priority</div><div class="meta-val"><span class="priority-tag ${pClass}">${(memo.priority||'').toUpperCase()}</span></div></div>
+      <div class="meta-item"><div class="meta-key">Status</div><div class="meta-val"><span class="status-pill ${sClass}">${memo.status}</span></div></div>
+      <div class="meta-item"><div class="meta-key">Category</div><div class="meta-val">${memo.category}</div></div>
+    </div>
+    <div class="memo-body-text">${memo.content}</div>
+    ${rcpts && rcpts.length ? `<div class="ack-section"><div class="ack-title">Acknowledgement Status (${(acks||[]).length}/${(rcpts||[]).length} read)</div><div class="ack-list">${ackRows}</div></div>` : ''}
+    <div class="feedback-section">
+      <div class="feedback-title">Feedback & Questions ${feedbacks?.length ? '('+feedbacks.length+')' : ''}</div>
+      ${feedbackRows || '<p style="font-size:12px;color:var(--muted);margin-bottom:12px">No feedback yet.</p>'}
+      <div class="compose-bar">
+        <input class="compose-input" id="feedbackInput" placeholder="Ask a question about this memo..." />
+        <button class="btn btn-primary btn-sm">Send</button>
+      </div>
+    </div>`;
+}
+
+function closePanel() {
+  document.getElementById('detailPanel').classList.remove('open');
+  document.getElementById('panelOverlay').classList.remove('open');
+  currentMemoId = null;
+}
+
+async function submitFeedback() {
+  const input = document.getElementById('feedbackInput');
+  const msg = input.value.trim();
+  if (!msg || !currentMemoId) return;
+  input.value = '';
+  const { error } = await sb.from('feedbacks').insert({ memo_id: currentMemoId, user_id: currentUser.id, message: msg });
+  if (error) { showToast('Failed to send feedback.', '❌', true); return; }
+  showToast('Feedback submitted!', '💬');
+  openPanel(currentMemoId);
+}
+
+async function submitReply(feedbackId) {
+  const input = document.getElementById('reply-' + feedbackId);
+  const reply = input?.value.trim();
+  if (!reply) return;
+  const { error } = await sb.from('feedbacks').update({ reply, replied_by: currentUser.id, replied_at: new Date().toISOString() }).eq('id', feedbackId);
+  if (error) { showToast('Failed to save reply.', '❌', true); return; }
+  showToast('Reply saved!', '✅');
+  openPanel(currentMemoId);
+  loadNotifications();
+}
+
+// ══════════════════════════════════════
+// EMAIL — RESEND
+// ══════════════════════════════════════
+const RESEND_API_KEY = 're_ZMQDjaTF_4RQLhuhw3J1b4hiUGE3svLvG';
+const RESEND_FROM    = 'weMemo <onboarding@resend.dev>';
+const RESEND_URL     = 'https://api.resend.com/emails';
+
+function buildEmailHTML(subject, content, priority, recipientName) {
+  const priorityColor = priority === 'High' ? '#ef4444' : priority === 'Medium' ? '#f59e0b' : '#00c896';
+  const priorityLabel = priority === 'High' ? '🔴 URGENT' : priority === 'Medium' ? '🟡 MEDIUM' : '🟢 ROUTINE';
+  return `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#0d1117;font-family:'Segoe UI',sans-serif">
+  <div style="max-width:560px;margin:32px auto;background:#161b22;border-radius:12px;overflow:hidden;border:1px solid #2a3341">
+    <div style="background:linear-gradient(135deg,#00c896,#0099ff);padding:28px 32px">
+      <div style="font-size:24px;font-weight:700;color:#000;letter-spacing:-1px">weMemo</div>
+      <div style="font-size:11px;color:rgba(0,0,0,0.6);letter-spacing:2px;text-transform:uppercase;margin-top:2px">CHMSC-Alijis Memorandum System</div>
+    </div>
+    <div style="padding:28px 32px">
+      <div style="display:inline-block;background:${priorityColor}22;color:${priorityColor};font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:1px;margin-bottom:16px">${priorityLabel}</div>
+      <h2 style="color:#e6edf3;font-size:18px;margin:0 0 8px">${subject}</h2>
+      <p style="color:#7d8fa3;font-size:13px;margin:0 0 20px">Dear ${recipientName},</p>
+      <div style="background:#1e2530;border-radius:8px;padding:18px;border-left:3px solid ${priorityColor};color:#e6edf3;font-size:14px;line-height:1.7;margin-bottom:24px">${content.replace(/\n/g,'<br>')}</div>
+      <p style="color:#7d8fa3;font-size:13px;margin:0 0 20px">Please log in to weMemo to <strong style="color:#00c896">acknowledge receipt</strong> of this memorandum.</p>
+      <div style="background:#0d1117;border-radius:8px;padding:14px 18px;font-size:12px;color:#7d8fa3;border:1px solid #2a3341">
+        This is an automated notification from the weMemo system of Carlos Hilado Memorial State College – Alijis Campus.
+      </div>
+    </div>
+    <div style="padding:16px 32px;border-top:1px solid #2a3341;font-size:11px;color:#7d8fa3;text-align:center">
+      © ${new Date().getFullYear()} CHMSC-Alijis · weMemo Notification System
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+async function sendEmail(toEmail, toName, subject, content, priority) {
+  if (!toEmail) return { success: false, error: 'No email address' };
+  try {
+    const res = await fetch(RESEND_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: RESEND_FROM,
+        to: [toEmail],
+        subject: `[weMemo] ${subject}`,
+        html: buildEmailHTML(subject, content, priority, toName)
+      })
+    });
+    const json = await res.json();
+    if (json.id) return { success: true };
+    return { success: false, error: JSON.stringify(json) };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
+async function sendBulkEmail(users, subject, content, priority) {
+  let sent = 0, failed = 0;
+  const results = await Promise.allSettled(
+    users
+      .filter(u => u.email)
+      .map(u => sendEmail(u.email, u.full_name || 'Recipient', subject, content, priority))
+  );
+  results.forEach(r => {
+    if (r.status === 'fulfilled' && r.value?.success) sent++;
+    else failed++;
+  });
+  const noEmail = users.filter(u => !u.email).length;
+  return { sent, failed, noEmail };
+}
+
+// ══════════════════════════════════════
+// SMS — SEMAPHORE
+// ══════════════════════════════════════
+const SEMAPHORE_API_KEY = 'a083006919b2f16aecc1cd1d5f763282';
+const SEMAPHORE_SENDER  = 'WEMEMO';
+const SEMAPHORE_URL     = 'https://api.semaphore.co/api/v4/messages';
+
+// Format PH phone number to 11-digit local format
+function formatPhone(phone) {
+  if (!phone) return null;
+  const cleaned = phone.replace(/\D/g, '');
+  if (cleaned.startsWith('63') && cleaned.length === 12) return '0' + cleaned.slice(2);
+  if (cleaned.startsWith('9') && cleaned.length === 10) return '0' + cleaned;
+  if (cleaned.startsWith('09') && cleaned.length === 11) return cleaned;
+  return null;
+}
+
+async function sendSMS(phoneNumber, message) {
+  const phone = formatPhone(phoneNumber);
+  if (!phone) return { success: false, error: 'Invalid phone number: ' + phoneNumber };
+  try {
+    const body = new URLSearchParams({
+      apikey: SEMAPHORE_API_KEY,
+      number: phone,
+      message: message,
+      sendername: SEMAPHORE_SENDER
+    });
+    const res = await fetch(SEMAPHORE_URL, { method: 'POST', body });
+    const json = await res.json();
+    // Semaphore returns array of message objects on success
+    if (Array.isArray(json) && json[0]?.message_id) return { success: true };
+    return { success: false, error: JSON.stringify(json) };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
+async function sendBulkSMS(users, subject, priority) {
+  const priorityLabel = priority === 'High' ? '🔴 URGENT' : priority === 'Medium' ? '🟡' : '🟢';
+  const msg = `${priorityLabel} weMemo: New memorandum released.\n\nSubject: ${subject}\n\nPlease log in to weMemo to read and acknowledge this memo.\n\n- CHMSC-Alijis Admin`;
+
+  let sent = 0, failed = 0;
+  const results = await Promise.allSettled(
+    users
+      .filter(u => u.phone_number)
+      .map(u => sendSMS(u.phone_number, msg))
+  );
+  results.forEach(r => {
+    if (r.status === 'fulfilled' && r.value?.success) sent++;
+    else failed++;
+  });
+
+  const noPhone = users.filter(u => !u.phone_number).length;
+  return { sent, failed, noPhone };
+}
+
+// ══════════════════════════════════════
+// COMPOSE
+// ══════════════════════════════════════
+function openCompose() { document.getElementById('composeModal').classList.add('open'); }
+function closeCompose() { document.getElementById('composeModal').classList.remove('open'); }
+
+async function sendMemo(isDraft = false) {
+  const subject = document.getElementById('composeSubject').value.trim();
+  const content = document.getElementById('composeContent').value.trim();
+  const category = document.getElementById('composeCategory').value;
+  const priority = document.getElementById('composePriority').value;
+  if (!subject || !content) { showToast('Subject and content are required.', '⚠️', true); return; }
+
+  const btn = document.getElementById('sendMemoBtn');
+  btn.textContent = 'Sending...'; btn.disabled = true;
+
+  const status = isDraft ? 'Draft' : 'Sent';
+  const { data: memo, error } = await sb.from('memos').insert({
+    subject, content, category, priority, status,
+    created_by: currentUser.id,
+    sent_at: isDraft ? null : new Date().toISOString()
+  }).select().single();
+
+  if (error) { btn.textContent = 'Send Memo'; btn.disabled = false; showToast('Failed to create memo: ' + error.message, '❌', true); return; }
+
+  let smsResult = null;
+  let emailResult = null;
+
+  if (!isDraft) {
+    // Determine selected recipient roles
+    const selectedRoles = [];
+    if (document.getElementById('rcpt-faculty').checked) selectedRoles.push('faculty');
+    if (document.getElementById('rcpt-gass').checked) selectedRoles.push('gass');
+    if (document.getElementById('rcpt-dean').checked) selectedRoles.push('dean');
+    if (document.getElementById('rcpt-admin').checked) selectedRoles.push('admin');
+
+    if (selectedRoles.length > 0) {
+      // Fetch full profiles — need phone + email for notifications
+      const { data: users } = await sb.from('profiles').select('id, full_name, phone_number, email').in('role', selectedRoles);
+
+      if (users && users.length > 0) {
+        // Save memo recipients to DB
+        const rcpts = users.map(u => ({ memo_id: memo.id, user_id: u.id }));
+        await sb.from('memo_recipients').insert(rcpts);
+
+        // Fire SMS
+        btn.textContent = 'Sending SMS...';
+        smsResult = await sendBulkSMS(users, subject, priority);
+
+        // Fire Emails
+        btn.textContent = 'Sending Emails...';
+        emailResult = await sendBulkEmail(users, subject, content, priority);
+
+        // Log all notifications to DB
+        const notifRows = [];
+        users.forEach(u => {
+          if (u.phone_number) notifRows.push({ memo_id: memo.id, user_id: u.id, type: 'sms', status: 'sent' });
+          if (u.email) notifRows.push({ memo_id: memo.id, user_id: u.id, type: 'email', status: 'sent' });
+        });
+        if (notifRows.length > 0) await sb.from('notifications').insert(notifRows);
+      }
+    }
+  }
+
+  btn.textContent = 'Send Memo'; btn.disabled = false;
+  closeCompose();
+
+  // Show combined result toast
+  if (isDraft) {
+    showToast('Memo saved as draft.', '📝');
+  } else {
+    const smsPart  = smsResult   ? `📱 ${smsResult.sent} SMS`     : '';
+    const emailPart = emailResult ? `📧 ${emailResult.sent} emails` : '';
+    const parts = [smsPart, emailPart].filter(Boolean).join(', ');
+    showToast(`Memo sent! ${parts} dispatched.`, '🚀');
+  }
+
+  // Reset form
+  document.getElementById('composeSubject').value = '';
+  document.getElementById('composeContent').value = '';
+
+  // Reload views
+  loadDashboard();
+  loadAllMemos();
+  loadNotifications();
+}
+
+function saveDraft() { sendMemo(true); }
+
+// ══════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════
+let toastTimer;
+function showToast(msg, icon = '✅', isError = false) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  document.getElementById('toastIcon').textContent = icon;
+  toast.className = 'toast show' + (isError ? ' error' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+// ══════════════════════════════════════
+// BOOT — check existing session
+// ══════════════════════════════════════
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session?.user) {
+    await loadApp(session.user);
+  }
+})();
+
+// ══════════════════════════════════════
+// WIRE UP ALL EVENT LISTENERS
+// ══════════════════════════════════════
+function bindEvents() {
+  // Auth
+  const signinBtn = document.getElementById('signinBtn');
+  const signupBtn = document.getElementById('signupBtn');
+  const signinPwd = document.getElementById('signinPasswordInput');
+  const goSignup  = document.getElementById('goToSignup');
+  const goSignin  = document.getElementById('goToSignin');
+  const signoutBtn= document.getElementById('signoutBtn');
+  if (signinBtn)  signinBtn.addEventListener('click', signIn);
+  if (signupBtn)  signupBtn.addEventListener('click', signUp);
+  if (signinPwd)  signinPwd.addEventListener('keydown', e => { if(e.key==='Enter') signIn(); });
+  if (goSignup)   goSignup.addEventListener('click', () => toggleForm('signup'));
+  if (goSignin)   goSignin.addEventListener('click', () => toggleForm('signin'));
+  if (signoutBtn) signoutBtn.addEventListener('click', signOut);
+
+  // Nav items
+  document.querySelectorAll('.nav-item[data-view]').forEach(el => {
+    el.addEventListener('click', () => {
+      const view = el.dataset.view;
+      showView(view, el);
+      if (view === 'recipients') loadRecipients();
+    });
+  });
+
+  // Topbar
+  const composeBtn = document.getElementById('openComposeBtn');
+  if (composeBtn) composeBtn.addEventListener('click', openCompose);
+
+  // Memo filters
+  const memoSearch   = document.getElementById('memoSearch');
+  const memoStatus   = document.getElementById('memoStatusFilter');
+  const memoPriority = document.getElementById('memoPriorityFilter');
+  if (memoSearch)   memoSearch.addEventListener('input', filterMemos);
+  if (memoStatus)   memoStatus.addEventListener('change', filterMemos);
+  if (memoPriority) memoPriority.addEventListener('change', filterMemos);
+
+  // Recipient filters
+  const rcptSearch = document.getElementById('recipientSearch');
+  const rcptRole   = document.getElementById('recipientRoleFilter');
+  if (rcptSearch) rcptSearch.addEventListener('input', filterRecipients);
+  if (rcptRole)   rcptRole.addEventListener('change', filterRecipients);
+
+  // Panel
+  const panelOverlay  = document.getElementById('panelOverlay');
+  const closePanelBtn = document.getElementById('closePanelBtn');
+  if (panelOverlay)  panelOverlay.addEventListener('click', closePanel);
+  if (closePanelBtn) closePanelBtn.addEventListener('click', closePanel);
+
+  // Compose modal
+  const closeComposeBtn = document.getElementById('closeComposeBtn');
+  const saveDraftBtn    = document.getElementById('saveDraftBtn');
+  const sendMemoBtn     = document.getElementById('sendMemoBtn');
+  if (closeComposeBtn) closeComposeBtn.addEventListener('click', closeCompose);
+  if (saveDraftBtn)    saveDraftBtn.addEventListener('click', () => sendMemo(true));
+  if (sendMemoBtn)     sendMemoBtn.addEventListener('click', () => sendMemo(false));
+
+  // Add user modal
+  const closeAddBtn = document.getElementById('closeAddUserBtn');
+  const addUserBtn  = document.getElementById('addUserBtn');
+  if (closeAddBtn) closeAddBtn.addEventListener('click', closeAddUser);
+  if (addUserBtn)  addUserBtn.addEventListener('click', addUser);
+
+  // Edit user modal
+  const closeEditBtn   = document.getElementById('closeEditUserBtn');
+  const confirmDelBtn  = document.getElementById('confirmDeleteBtn');
+  const saveEditBtn    = document.getElementById('editUserBtn');
+  if (closeEditBtn)  closeEditBtn.addEventListener('click', closeEditUser);
+  if (confirmDelBtn) confirmDelBtn.addEventListener('click', confirmDeleteUser);
+  if (saveEditBtn)   saveEditBtn.addEventListener('click', saveEditUser);
+
+  // Add user — second close button (cancel)
+  document.querySelectorAll('[id="closeAddUserBtn"]').forEach(b => b.addEventListener('click', closeAddUser));
+}
+
+bindEvents();
+
+}); // end DOMContentLoaded
+</script>
+</body>
+</html>
