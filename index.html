@@ -318,6 +318,58 @@
   .tl-error { font-size:11px; color:var(--danger); background:rgba(239,68,68,.08); border-radius:4px; padding:4px 8px; margin-top:4px; font-family:monospace; }
   .tl-empty { padding:24px; text-align:center; color:var(--muted); font-size:13px; }
 
+  /* ── PHASE 2: ADD RECIPIENTS MODAL ── */
+  .modal-search-input { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:7px; padding:9px 13px; font-size:13px; color:var(--text); font-family:'Sora',sans-serif; outline:none; margin-bottom:10px; }
+  .modal-search-input:focus { border-color:var(--accent); }
+  .user-pick-list { max-height:220px; overflow-y:auto; display:flex; flex-direction:column; gap:4px; margin-bottom:12px; }
+  .user-pick-item { display:flex; align-items:center; gap:10px; padding:8px 10px; background:var(--surface2); border:1px solid var(--border); border-radius:6px; cursor:pointer; transition:all .1s; }
+  .user-pick-item:hover { border-color:var(--accent); }
+  .user-pick-item.selected { border-color:var(--accent); background:rgba(0,200,150,.06); }
+  .user-pick-check { width:15px; height:15px; accent-color:var(--accent); flex-shrink:0; }
+  .user-pick-info { flex:1; min-width:0; }
+  .user-pick-name { font-size:13px; font-weight:600; }
+  .user-pick-sub { font-size:11px; color:var(--muted); }
+  .selected-count { font-size:12px; color:var(--accent); font-weight:600; margin-bottom:8px; }
+
+  /* ── PHASE 2: FEEDBACK IN DETAIL VIEW ── */
+  .detail-section { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px 20px; margin-bottom:20px; }
+  .detail-section-title { font-size:12px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:14px; font-weight:600; display:flex; align-items:center; justify-content:space-between; }
+  .fb-item { background:var(--surface2); border-radius:8px; padding:12px 14px; margin-bottom:8px; border-left:3px solid var(--accent2); }
+  .fb-item.status-replied { border-left-color:var(--accent); }
+  .fb-item.status-closed  { border-left-color:var(--muted); opacity:.7; }
+  .fb-meta { display:flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap; }
+  .fb-author { font-size:12px; font-weight:600; }
+  .fb-time { font-size:11px; color:var(--muted); font-family:'Space Mono',monospace; }
+  .fb-status-badge { font-size:10px; padding:1px 7px; border-radius:10px; font-weight:600; letter-spacing:.4px; }
+  .fb-open     { background:rgba(0,153,255,.12); color:var(--accent2); }
+  .fb-replied  { background:rgba(0,200,150,.12); color:var(--accent); }
+  .fb-closed   { background:rgba(125,143,163,.12); color:var(--muted); }
+  .fb-text { font-size:13px; line-height:1.55; margin-bottom:8px; }
+  .fb-reply-box { background:rgba(0,200,150,.05); border-radius:6px; padding:8px 10px; border-left:3px solid var(--accent); font-size:12px; color:var(--muted); margin-bottom:8px; }
+  .fb-reply-box strong { color:var(--accent); display:block; margin-bottom:2px; font-size:11px; }
+  .fb-actions { display:flex; gap:6px; margin-top:4px; flex-wrap:wrap; }
+  .fb-reply-row { display:flex; gap:6px; margin-top:8px; }
+  .fb-reply-input { flex:1; background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:7px 10px; font-size:12px; color:var(--text); font-family:'Sora',sans-serif; outline:none; }
+  .fb-reply-input:focus { border-color:var(--accent); }
+  .detail-compose-bar { display:flex; gap:8px; margin-top:10px; }
+  .detail-compose-input { flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:9px 12px; font-size:13px; color:var(--text); font-family:'Sora',sans-serif; outline:none; }
+  .detail-compose-input:focus { border-color:var(--accent); }
+
+  /* ── PHASE 2: INTERNAL NOTES ── */
+  .note-item { display:flex; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); }
+  .note-item:last-child { border-bottom:none; }
+  .note-avatar { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2)); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#000; flex-shrink:0; }
+  .note-body { flex:1; }
+  .note-author { font-size:11px; font-weight:600; margin-bottom:3px; }
+  .note-time { font-size:10px; color:var(--muted); font-family:'Space Mono',monospace; margin-left:6px; }
+  .note-text { font-size:13px; line-height:1.55; color:var(--text); }
+  .note-compose { display:flex; gap:8px; margin-top:10px; }
+  .note-input { flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:8px 12px; font-size:13px; color:var(--text); font-family:'Sora',sans-serif; outline:none; }
+  .note-input:focus { border-color:var(--warn); }
+
+  /* ── PHASE 2: DETAIL VIEW ACTION ROW ── */
+  .detail-action-row { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+
 </style>
 </head>
 <body>
@@ -643,6 +695,37 @@
               </div>
             </div>
           </div>
+
+          <!-- Phase 2: Action row -->
+          <div class="detail-action-row">
+            <button class="btn btn-ghost btn-sm" id="addRecipientsBtn">+ Add Recipients</button>
+            <button class="btn btn-ghost btn-sm" id="exportCsvBtn">⬇ Export CSV</button>
+          </div>
+
+          <!-- Phase 2: Feedback section -->
+          <div class="detail-section" id="detailFeedbackSection">
+            <div class="detail-section-title">
+              <span>💬 Feedback &amp; Questions <span id="detailFbCount" style="color:var(--muted);font-weight:400"></span></span>
+            </div>
+            <div id="detailFeedbackList"><div class="loading"><div class="spinner"></div></div></div>
+            <div class="detail-compose-bar">
+              <input class="detail-compose-input" id="detailFeedbackInput" placeholder="Ask a question or leave feedback..." />
+              <button class="btn btn-primary btn-sm" id="detailFeedbackSendBtn">Send</button>
+            </div>
+          </div>
+
+          <!-- Phase 2: Internal Notes (admin-only) -->
+          <div class="detail-section admin-only" id="detailNotesSection">
+            <div class="detail-section-title">
+              <span>🔒 Internal Notes <span style="font-size:10px;color:var(--warn);font-weight:400;margin-left:6px">Admin only — not visible to recipients</span></span>
+            </div>
+            <div id="detailNotesList"><div class="loading"><div class="spinner"></div></div></div>
+            <div class="note-compose">
+              <input class="note-input" id="detailNoteInput" placeholder="Add a private note..." />
+              <button class="btn btn-warn btn-sm" id="detailNoteSendBtn">Add Note</button>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -659,6 +742,34 @@
   </div>
   <div class="panel-body" id="panelBody">
     <div class="loading"><div class="spinner"></div> Loading...</div>
+  </div>
+</div>
+
+<!-- ADD RECIPIENTS MODAL (Phase 2) -->
+<div class="modal-overlay" id="addRecipientsModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">+ Add Recipients</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px" id="addRcptMemoTitle"></div>
+      </div>
+      <div class="close-btn" id="closeAddRcptBtn">×</div>
+    </div>
+    <div class="modal-body">
+      <input class="modal-search-input" id="addRcptSearch" placeholder="Search by name, email or role..." />
+      <div class="selected-count" id="addRcptSelectedCount" style="display:none"></div>
+      <div class="user-pick-list" id="addRcptList">
+        <div class="loading"><div class="spinner"></div> Loading...</div>
+      </div>
+      <div style="font-size:11px;color:var(--muted)">
+        Already-added recipients are hidden. Selected users will receive an immediate email + SMS notification.
+      </div>
+      <div class="error-msg" id="addRcptError"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" id="cancelAddRcptBtn">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="confirmAddRcptBtn">Add &amp; Notify</button>
+    </div>
   </div>
 </div>
 
@@ -2014,6 +2125,293 @@ async function sendNotificationsWithId(users, subject, content, priority, memoId
 }
 
 
+
+// ══════════════════════════════════════
+// PHASE 2 — ADD RECIPIENTS
+// ══════════════════════════════════════
+let addRcptAllUsers   = [];   // all profiles not yet added
+let addRcptFiltered   = [];
+let addRcptSelected   = new Set(); // user_ids selected
+
+async function openAddRecipients() {
+  if (!detailMemoId) return;
+  addRcptSelected = new Set();
+  document.getElementById('addRcptMemoTitle').textContent = detailMemo?.subject || '';
+  document.getElementById('addRcptSearch').value = '';
+  document.getElementById('addRcptError').textContent = '';
+  document.getElementById('addRcptSelectedCount').style.display = 'none';
+  document.getElementById('addRcptList').innerHTML = '<div class="loading"><div class="spinner"></div> Loading...</div>';
+  document.getElementById('addRecipientsModal').classList.add('open');
+
+  // Fetch all profiles
+  const { data: allProfiles } = await sb.from('profiles').select('id, full_name, role, email, phone_number').order('full_name');
+  // Exclude already-added recipients
+  const existingIds = new Set(detailRecipients.map(r => r.user_id));
+  addRcptAllUsers = (allProfiles || []).filter(p => !existingIds.has(p.id));
+  addRcptFiltered = [...addRcptAllUsers];
+  renderAddRcptList();
+}
+
+function renderAddRcptList() {
+  const list = document.getElementById('addRcptList');
+  if (!addRcptFiltered.length) {
+    list.innerHTML = '<div style="padding:16px;text-align:center;color:var(--muted);font-size:13px">No users available to add.</div>';
+    return;
+  }
+  list.innerHTML = addRcptFiltered.map(u => {
+    const initials  = (u.full_name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const roleLabel = { admin:'Admin', faculty:'Faculty', gass:'GASS', dean:'Dean' }[u.role] || u.role;
+    const roleClass = { admin:'role-admin', faculty:'role-faculty', gass:'role-gass', dean:'role-dean' }[u.role] || 'role-faculty';
+    const sel = addRcptSelected.has(u.id);
+    return '<div class="user-pick-item' + (sel ? ' selected' : '') + '" data-uid="' + u.id + '">' +
+      '<input type="checkbox" class="user-pick-check" ' + (sel ? 'checked' : '') + ' data-uid="' + u.id + '" />' +
+      '<div class="user-avatar-sm">' + initials + '</div>' +
+      '<div class="user-pick-info">' +
+        '<div class="user-pick-name">' + u.full_name + '</div>' +
+        '<div class="user-pick-sub">' + (u.email || '—') + ' · ' + (u.phone_number || 'no phone') + '</div>' +
+      '</div>' +
+      '<span class="role-badge ' + roleClass + '">' + roleLabel + '</span>' +
+    '</div>';
+  }).join('');
+
+  list.querySelectorAll('.user-pick-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const uid = item.dataset.uid;
+      if (addRcptSelected.has(uid)) addRcptSelected.delete(uid);
+      else addRcptSelected.add(uid);
+      renderAddRcptList();
+      const cnt = document.getElementById('addRcptSelectedCount');
+      if (addRcptSelected.size > 0) {
+        cnt.style.display = 'block';
+        cnt.textContent = addRcptSelected.size + ' user' + (addRcptSelected.size > 1 ? 's' : '') + ' selected';
+      } else {
+        cnt.style.display = 'none';
+      }
+    });
+  });
+}
+
+function filterAddRcpt() {
+  const q = document.getElementById('addRcptSearch').value.toLowerCase();
+  addRcptFiltered = addRcptAllUsers.filter(u =>
+    u.full_name.toLowerCase().includes(q) ||
+    (u.email||'').toLowerCase().includes(q) ||
+    (u.role||'').toLowerCase().includes(q)
+  );
+  renderAddRcptList();
+}
+
+function closeAddRecipients() {
+  document.getElementById('addRecipientsModal').classList.remove('open');
+}
+
+async function confirmAddRecipients() {
+  const uids = [...addRcptSelected];
+  if (!uids.length) { document.getElementById('addRcptError').textContent = 'Select at least one user.'; return; }
+
+  const btn = document.getElementById('confirmAddRcptBtn');
+  btn.textContent = 'Adding...'; btn.disabled = true;
+  document.getElementById('addRcptError').textContent = '';
+
+  // 1. Insert memo_recipients rows
+  const rows = uids.map(uid => ({ memo_id: detailMemoId, user_id: uid }));
+  const { error: rcptErr } = await sb.from('memo_recipients').insert(rows);
+  if (rcptErr) {
+    document.getElementById('addRcptError').textContent = 'Failed: ' + rcptErr.message;
+    btn.textContent = 'Add & Notify'; btn.disabled = false;
+    return;
+  }
+
+  // 2. Send notifications immediately via send-delivery-action
+  const { data: { session } } = await sb.auth.getSession();
+  try {
+    const res = await fetch(DELIVERY_ACTION_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session?.access_token },
+      body: JSON.stringify({ memo_id: detailMemoId, user_ids: uids, channel: 'both', action_type: 'initial' }),
+    });
+    const json = await res.json();
+    closeAddRecipients();
+    showToast('Added ' + uids.length + ' recipient' + (uids.length > 1 ? 's' : '') + '. ' + (json.succeeded || 0) + ' notified.', '✅');
+  } catch (e) {
+    closeAddRecipients();
+    showToast('Recipients added but notification failed: ' + e.message, '⚠️', true);
+  }
+
+  btn.textContent = 'Add & Notify'; btn.disabled = false;
+  // Refresh detail view
+  await loadMemoDetail(detailMemoId);
+}
+
+// ══════════════════════════════════════
+// PHASE 2 — FEEDBACK IN DETAIL VIEW
+// ══════════════════════════════════════
+let detailFeedbacks = [];
+
+async function loadDetailFeedback() {
+  const { data: feedbacks } = await sb.from('feedbacks')
+    .select('*, profiles!feedbacks_user_id_fkey(full_name)')
+    .eq('memo_id', detailMemoId)
+    .order('created_at', { ascending: true });
+
+  detailFeedbacks = feedbacks || [];
+  const countEl = document.getElementById('detailFbCount');
+  if (countEl) countEl.textContent = detailFeedbacks.length ? '(' + detailFeedbacks.length + ')' : '';
+
+  renderDetailFeedback();
+}
+
+function renderDetailFeedback() {
+  const list = document.getElementById('detailFeedbackList');
+  if (!list) return;
+  const isAdmin = currentProfile?.role === 'admin';
+
+  if (!detailFeedbacks.length) {
+    list.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:8px 0 4px">No feedback yet.</div>';
+    return;
+  }
+
+  list.innerHTML = detailFeedbacks.map(f => {
+    const time = new Date(f.created_at).toLocaleString('en-PH', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+    const status = f.reply ? 'replied' : (f.status || 'open');
+    const statusLabel = { open:'Open', replied:'Replied', closed:'Closed' }[status] || status;
+    const statusClass = { open:'fb-open', replied:'fb-replied', closed:'fb-closed' }[status] || 'fb-open';
+    const replyHtml = f.reply
+      ? '<div class="fb-reply-box"><strong>Admin Reply:</strong>' + f.reply + '</div>'
+      : '';
+    const adminActions = isAdmin && !f.reply
+      ? '<div class="fb-reply-row">' +
+          '<input class="fb-reply-input" id="fb-reply-' + f.id + '" placeholder="Type reply..." />' +
+          '<button class="btn btn-ghost btn-sm" onclick="submitDetailReply(\'' + f.id + '\')">Reply</button>' +
+          (status !== 'closed' ? '<button class="btn btn-sm" style="background:rgba(125,143,163,.1);border:1px solid var(--border);color:var(--muted)" onclick="closeFeedback(\'' + f.id + '\')">Close</button>' : '') +
+        '</div>'
+      : '';
+
+    return '<div class="fb-item status-' + status + '" id="fb-' + f.id + '">' +
+      '<div class="fb-meta">' +
+        '<span class="fb-author">' + (f.profiles?.full_name || 'Unknown') + '</span>' +
+        '<span class="fb-time">' + time + '</span>' +
+        '<span class="fb-status-badge ' + statusClass + '">' + statusLabel + '</span>' +
+      '</div>' +
+      '<div class="fb-text">' + f.message + '</div>' +
+      replyHtml +
+      adminActions +
+    '</div>';
+  }).join('');
+}
+
+async function submitDetailFeedback() {
+  const input = document.getElementById('detailFeedbackInput');
+  const msg = input?.value.trim();
+  if (!msg || !detailMemoId) return;
+  input.value = '';
+  const { error } = await sb.from('feedbacks').insert({ memo_id: detailMemoId, user_id: currentUser.id, message: msg });
+  if (error) { showToast('Failed to send feedback.', '❌', true); return; }
+  showToast('Feedback sent!', '💬');
+  await loadDetailFeedback();
+}
+
+async function submitDetailReply(feedbackId) {
+  const input = document.getElementById('fb-reply-' + feedbackId);
+  const reply = input?.value.trim();
+  if (!reply) return;
+  const { error } = await sb.from('feedbacks').update({
+    reply, replied_by: currentUser.id, replied_at: new Date().toISOString(), status: 'replied'
+  }).eq('id', feedbackId);
+  if (error) { showToast('Failed to save reply.', '❌', true); return; }
+  showToast('Reply saved!', '✅');
+  await loadDetailFeedback();
+  loadNotifications();
+}
+
+async function closeFeedback(feedbackId) {
+  const { error } = await sb.from('feedbacks').update({ status: 'closed' }).eq('id', feedbackId);
+  if (error) { showToast('Failed to close.', '❌', true); return; }
+  showToast('Feedback closed.', '✅');
+  await loadDetailFeedback();
+}
+
+// ══════════════════════════════════════
+// PHASE 2 — INTERNAL NOTES
+// ══════════════════════════════════════
+async function loadDetailNotes() {
+  if (currentProfile?.role !== 'admin') return;
+  const { data: notes } = await sb.from('memo_notes')
+    .select('*, profiles!memo_notes_created_by_fkey(full_name)')
+    .eq('memo_id', detailMemoId)
+    .order('created_at', { ascending: true });
+
+  const list = document.getElementById('detailNotesList');
+  if (!list) return;
+
+  if (!notes || !notes.length) {
+    list.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:4px 0 8px">No internal notes yet.</div>';
+    return;
+  }
+
+  list.innerHTML = notes.map(n => {
+    const initials = (n.profiles?.full_name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const time = new Date(n.created_at).toLocaleString('en-PH', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+    return '<div class="note-item">' +
+      '<div class="note-avatar">' + initials + '</div>' +
+      '<div class="note-body">' +
+        '<div class="note-author">' + (n.profiles?.full_name || 'Admin') + '<span class="note-time">' + time + '</span></div>' +
+        '<div class="note-text">' + n.body + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+async function submitDetailNote() {
+  const input = document.getElementById('detailNoteInput');
+  const body = input?.value.trim();
+  if (!body || !detailMemoId) return;
+  input.value = '';
+  const { error } = await sb.from('memo_notes').insert({ memo_id: detailMemoId, created_by: currentUser.id, body });
+  if (error) { showToast('Failed to save note: ' + error.message, '❌', true); return; }
+  showToast('Note saved.', '🔒');
+  await loadDetailNotes();
+}
+
+// ══════════════════════════════════════
+// PHASE 2 — EXPORT CSV
+// ══════════════════════════════════════
+function exportDetailCsv() {
+  if (!detailRecipients.length) { showToast('No recipients to export.', '⚠️', true); return; }
+  const rows = [
+    ['Name', 'Role', 'Email', 'Phone', 'Read Status', 'Acknowledged At', 'Email Delivery', 'Email Time', 'SMS Delivery', 'SMS Time']
+  ];
+  detailRecipients.forEach(r => {
+    const ackAt = r.acked_at ? new Date(r.acked_at).toLocaleString('en-PH') : '';
+    const emailStatus = r.email_status ? r.email_status.status + ' (' + r.email_status.attempt_type + ')' : 'not attempted';
+    const emailTime = r.email_status ? new Date(r.email_status.created_at).toLocaleString('en-PH') : '';
+    const smsStatus = r.sms_status ? r.sms_status.status + ' (' + r.sms_status.attempt_type + ')' : 'not attempted';
+    const smsTime = r.sms_status ? new Date(r.sms_status.created_at).toLocaleString('en-PH') : '';
+    rows.push([
+      r.full_name, r.role, r.email, r.phone_number,
+      r.acked ? 'Read' : 'Unread', ackAt,
+      emailStatus, emailTime, smsStatus, smsTime
+    ]);
+  });
+  const csv = rows.map(row => row.map(cell => '"' + String(cell||'').replace(/"/g, '""') + '"').join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = 'memo-delivery-' + (detailMemo?.ref_number || detailMemoId?.slice(0,8)) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('CSV exported.', '⬇');
+}
+
+// Hook: extend loadMemoDetail to also load feedback + notes
+const _origLoadMemoDetail = loadMemoDetail;
+loadMemoDetail = async function(memoId) {
+  await _origLoadMemoDetail(memoId);
+  await Promise.all([loadDetailFeedback(), loadDetailNotes()]);
+};
+
+
 // ══════════════════════════════════════
 // TEST NOTIFICATION
 // ══════════════════════════════════════
@@ -2193,6 +2591,34 @@ function bindEvents() {
   // Timeline modal close
   const closeTimelineBtn = document.getElementById('closeTimelineBtn');
   if (closeTimelineBtn) closeTimelineBtn.addEventListener('click', closeTimeline);
+
+  // ── Phase 2: Add Recipients ──
+  const addRecipientsBtn  = document.getElementById('addRecipientsBtn');
+  const closeAddRcptBtn   = document.getElementById('closeAddRcptBtn');
+  const cancelAddRcptBtn  = document.getElementById('cancelAddRcptBtn');
+  const confirmAddRcptBtn = document.getElementById('confirmAddRcptBtn');
+  const addRcptSearch     = document.getElementById('addRcptSearch');
+  if (addRecipientsBtn)  addRecipientsBtn.addEventListener('click', openAddRecipients);
+  if (closeAddRcptBtn)   closeAddRcptBtn.addEventListener('click', closeAddRecipients);
+  if (cancelAddRcptBtn)  cancelAddRcptBtn.addEventListener('click', closeAddRecipients);
+  if (confirmAddRcptBtn) confirmAddRcptBtn.addEventListener('click', confirmAddRecipients);
+  if (addRcptSearch)     addRcptSearch.addEventListener('input', filterAddRcpt);
+
+  // ── Phase 2: Export CSV ──
+  const exportCsvBtn = document.getElementById('exportCsvBtn');
+  if (exportCsvBtn) exportCsvBtn.addEventListener('click', exportDetailCsv);
+
+  // ── Phase 2: Detail feedback compose ──
+  const detailFbSendBtn = document.getElementById('detailFeedbackSendBtn');
+  const detailFbInput   = document.getElementById('detailFeedbackInput');
+  if (detailFbSendBtn) detailFbSendBtn.addEventListener('click', submitDetailFeedback);
+  if (detailFbInput)   detailFbInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitDetailFeedback(); });
+
+  // ── Phase 2: Internal notes ──
+  const detailNoteSendBtn = document.getElementById('detailNoteSendBtn');
+  const detailNoteInput   = document.getElementById('detailNoteInput');
+  if (detailNoteSendBtn) detailNoteSendBtn.addEventListener('click', submitDetailNote);
+  if (detailNoteInput)   detailNoteInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitDetailNote(); });
 }
 
 bindEvents();
