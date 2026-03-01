@@ -259,6 +259,65 @@
   .toast-icon { font-size:15px; flex-shrink:0; }
 
   ::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:transparent; } ::-webkit-scrollbar-thumb { background:var(--border); border-radius:10px; }
+
+  /* ── MEMO DETAIL VIEW ── */
+  .detail-view-header { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:22px 24px; margin-bottom:20px; }
+  .detail-back-btn { display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); cursor:pointer; margin-bottom:14px; padding:5px 0; background:none; border:none; font-family:'Sora',sans-serif; transition:color .15s; }
+  .detail-back-btn:hover { color:var(--accent); }
+  .detail-memo-title { font-size:20px; font-weight:700; margin-bottom:10px; line-height:1.3; }
+  .detail-meta-grid { display:flex; gap:28px; flex-wrap:wrap; }
+  .detail-meta-item { display:flex; flex-direction:column; gap:3px; }
+  .detail-meta-key { font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); }
+  .detail-meta-val { font-size:13px; font-weight:500; }
+  .detail-rate-badge { display:inline-flex; align-items:center; gap:8px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:8px 14px; font-size:13px; }
+  .detail-rate-num { font-family:'Space Mono',monospace; font-size:18px; font-weight:700; color:var(--accent); }
+  .detail-rate-unread { font-family:'Space Mono',monospace; font-size:13px; color:var(--warn); margin-left:6px; }
+
+  /* ── RECIPIENT STATUS TABLE ── */
+  .bulk-bar { padding:10px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; flex-wrap:wrap; background:var(--surface2); }
+  .bulk-bar-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-right:4px; }
+  .select-quick-btn { font-size:11px; padding:4px 10px; border-radius:5px; background:rgba(125,143,163,.1); border:1px solid var(--border); color:var(--muted); cursor:pointer; font-family:'Sora',sans-serif; transition:all .12s; white-space:nowrap; }
+  .select-quick-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .bulk-sep { width:1px; height:20px; background:var(--border); margin:0 4px; }
+  .btn-warn { background:rgba(245,158,11,.1); border:1px solid rgba(245,158,11,.3); color:var(--warn); }
+  .btn-warn:hover { background:rgba(245,158,11,.2); }
+  .btn-inline { padding:4px 10px; font-size:11px; border-radius:5px; font-family:'Sora',sans-serif; font-weight:600; cursor:pointer; border:1px solid var(--border); background:transparent; color:var(--muted); transition:all .12s; white-space:nowrap; }
+  .btn-inline:hover { color:var(--text); border-color:var(--text); }
+  .btn-inline.email { color:var(--accent2); border-color:rgba(0,153,255,.3); }
+  .btn-inline.email:hover { background:rgba(0,153,255,.1); }
+  .btn-inline.sms { color:var(--accent); border-color:rgba(0,200,150,.3); }
+  .btn-inline.sms:hover { background:rgba(0,200,150,.1); }
+  .btn-inline.remind { color:var(--warn); border-color:rgba(245,158,11,.3); }
+  .btn-inline.remind:hover { background:rgba(245,158,11,.1); }
+  .btn-inline.timeline { color:var(--muted); }
+  .delivery-chip { display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:600; padding:2px 7px; border-radius:4px; font-family:'Space Mono',monospace; }
+  .chip-sent { background:rgba(0,200,150,.12); color:var(--accent); }
+  .chip-failed { background:rgba(239,68,68,.12); color:var(--danger); }
+  .chip-pending { background:rgba(245,158,11,.12); color:var(--warn); }
+  .chip-none { background:rgba(125,143,163,.1); color:var(--muted); }
+  .chip-time { font-size:10px; color:var(--muted); font-family:'Space Mono',monospace; display:block; margin-top:2px; }
+  .rcpt-checkbox { width:15px; height:15px; accent-color:var(--accent); cursor:pointer; }
+  .pagination-bar { padding:10px 14px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--muted); }
+  .page-btn { padding:4px 10px; font-size:12px; border-radius:5px; background:var(--surface2); border:1px solid var(--border); color:var(--text); cursor:pointer; font-family:'Sora',sans-serif; }
+  .page-btn:disabled { opacity:.4; cursor:default; }
+  .page-btn:not(:disabled):hover { border-color:var(--accent); color:var(--accent); }
+
+  /* ── TIMELINE MODAL ── */
+  .modal-xl { width:700px; max-width:96vw; }
+  .timeline { display:flex; flex-direction:column; gap:0; }
+  .tl-item { display:flex; gap:14px; padding:10px 0; position:relative; }
+  .tl-item:not(:last-child)::before { content:''; position:absolute; left:15px; top:34px; bottom:-10px; width:1px; background:var(--border); }
+  .tl-dot { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; border:2px solid var(--border); background:var(--surface2); }
+  .tl-dot.sent { border-color:var(--accent); background:rgba(0,200,150,.1); }
+  .tl-dot.failed { border-color:var(--danger); background:rgba(239,68,68,.1); }
+  .tl-dot.ack { border-color:var(--accent2); background:rgba(0,153,255,.1); }
+  .tl-body { flex:1; }
+  .tl-title { font-size:13px; font-weight:600; margin-bottom:2px; }
+  .tl-sub { font-size:11px; color:var(--muted); line-height:1.5; }
+  .tl-time { font-size:10px; color:var(--muted); font-family:'Space Mono',monospace; margin-top:3px; }
+  .tl-error { font-size:11px; color:var(--danger); background:rgba(239,68,68,.08); border-radius:4px; padding:4px 8px; margin-top:4px; font-family:monospace; }
+  .tl-empty { padding:24px; text-align:center; color:var(--muted); font-size:13px; }
+
 </style>
 </head>
 <body>
@@ -391,14 +450,34 @@
             <div class="stat-card warn"><div class="stat-label">Pending Ack.</div><div class="stat-value warn" id="statPending">—</div><div class="stat-sub">Awaiting read receipt</div></div>
             <div class="stat-card red"><div class="stat-label">Open Feedback</div><div class="stat-value red" id="statFeedback">—</div><div class="stat-sub">Needs response</div></div>
           </div>
+
+          <!-- NOTIFICATION STATUS CARDS -->
+          <div class="stats-row admin-only">
+            <div class="stat-card blue"><div class="stat-label">📱 SMS Sent</div><div class="stat-value blue" id="statSMSSent">—</div><div class="stat-sub">Total delivered</div></div>
+            <div class="stat-card red"><div class="stat-label">📱 SMS Failed</div><div class="stat-value red" id="statSMSFailed">—</div><div class="stat-sub">Delivery errors</div></div>
+            <div class="stat-card green"><div class="stat-label">📧 Email Sent</div><div class="stat-value green" id="statEmailSent">—</div><div class="stat-sub">Total delivered</div></div>
+            <div class="stat-card red"><div class="stat-label">📧 Email Failed</div><div class="stat-value red" id="statEmailFailed">—</div><div class="stat-sub">Delivery errors</div></div>
+          </div>
+
           <div class="section-header">
             <div class="section-title">Recent Memos</div>
           </div>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Subject</th><th>Date</th><th>Priority</th><th>Status</th><th>Read Rate</th></tr></thead>
-              <tbody id="dashboardMemoTable"><tr><td colspan="5" class="empty-row"><div class="loading"><div class="spinner"></div> Loading...</div></td></tr></tbody>
+              <thead><tr><th>Subject</th><th>Date</th><th>Priority</th><th>Status</th><th>Read Rate</th><th class="admin-only">📱 SMS</th><th class="admin-only">📧 Email</th></tr></thead>
+              <tbody id="dashboardMemoTable"><tr><td colspan="7" class="empty-row"><div class="loading"><div class="spinner"></div> Loading...</div></td></tr></tbody>
             </table>
+          </div>
+
+          <!-- EDGE FUNCTION DEBUG (admin only) -->
+          <div class="admin-only" id="debugSection">
+            <div class="section-header" style="margin-top:8px">
+              <div class="section-title">🔧 Notification Debug</div>
+              <button class="btn btn-ghost btn-sm" id="testNotifBtn">Test SMS & Email</button>
+            </div>
+            <div class="table-wrap" id="debugLog" style="padding:14px 16px;font-size:12px;color:var(--muted);font-family:monospace;min-height:60px">
+              Click "Test SMS & Email" to send a test notification to your own account.
+            </div>
           </div>
         </div>
 
@@ -484,6 +563,88 @@
           </div>
         </div>
 
+        <!-- MEMO DETAIL (Phase 1) -->
+        <div class="view" id="view-memo-detail">
+          <!-- Header card -->
+          <div class="detail-view-header">
+            <button class="detail-back-btn" id="detailBackBtn">← Back</button>
+            <div class="detail-memo-title" id="detailMemoTitle">Loading...</div>
+            <div class="detail-meta-grid" id="detailMetaGrid"></div>
+          </div>
+
+          <!-- Read rate summary -->
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap">
+            <div class="detail-rate-badge">
+              <span>Read Rate</span>
+              <span class="detail-rate-num" id="detailReadRate">—</span>
+              <span style="color:var(--muted);font-size:13px" id="detailReadFraction"></span>
+            </div>
+            <div class="detail-rate-badge">
+              <span>⏳ Unread</span>
+              <span class="detail-rate-unread" id="detailUnread">—</span>
+            </div>
+            <div class="detail-rate-badge">
+              <span>📱 SMS</span>
+              <span style="font-family:'Space Mono',monospace;font-size:13px" id="detailSMSSummary">—</span>
+            </div>
+            <div class="detail-rate-badge">
+              <span>📧 Email</span>
+              <span style="font-family:'Space Mono',monospace;font-size:13px" id="detailEmailSummary">—</span>
+            </div>
+          </div>
+
+          <!-- Recipient status table -->
+          <div class="section-header">
+            <div class="section-title">Recipient Delivery Status</div>
+          </div>
+          <div class="table-wrap">
+            <!-- Quick select + bulk action bar -->
+            <div class="bulk-bar">
+              <span class="bulk-bar-label">Select:</span>
+              <button class="select-quick-btn" id="qsAll">All</button>
+              <button class="select-quick-btn" id="qsNone">None</button>
+              <button class="select-quick-btn" id="qsUnread">Unread</button>
+              <button class="select-quick-btn" id="qsEmailFailed">Email Failed</button>
+              <button class="select-quick-btn" id="qsSmsFailed">SMS Failed</button>
+              <button class="select-quick-btn" id="qsNotAttempted">Not Attempted</button>
+              <div class="bulk-sep"></div>
+              <span class="bulk-bar-label">Bulk:</span>
+              <button class="btn btn-inline email" id="bulkResendEmail">📧 Resend Email</button>
+              <button class="btn btn-inline sms" id="bulkResendSms">📱 Resend SMS</button>
+              <button class="btn btn-inline remind" id="bulkReminderBoth">⏰ Reminder (Both)</button>
+            </div>
+            <!-- Table -->
+            <div style="overflow-x:auto">
+              <table id="detailRecipientTable" style="min-width:900px">
+                <thead>
+                  <tr>
+                    <th style="width:36px"><input type="checkbox" class="rcpt-checkbox" id="checkAll" /></th>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Read Status</th>
+                    <th>📧 Email</th>
+                    <th>📱 SMS</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="detailRecipientBody">
+                  <tr><td colspan="9" class="empty-row"><div class="loading"><div class="spinner"></div> Loading...</div></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Pagination -->
+            <div class="pagination-bar">
+              <span id="detailPageInfo">—</span>
+              <div style="display:flex;gap:6px">
+                <button class="page-btn" id="detailPrevBtn">← Prev</button>
+                <button class="page-btn" id="detailNextBtn">Next →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   </div>
@@ -498,6 +659,24 @@
   </div>
   <div class="panel-body" id="panelBody">
     <div class="loading"><div class="spinner"></div> Loading...</div>
+  </div>
+</div>
+
+<!-- TIMELINE MODAL (Phase 1) -->
+<div class="modal-overlay" id="timelineModal">
+  <div class="modal modal-xl">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">📋 Delivery Timeline</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px" id="timelineRecipientName"></div>
+      </div>
+      <div class="close-btn" id="closeTimelineBtn">×</div>
+    </div>
+    <div class="modal-body" style="max-height:65vh;overflow-y:auto">
+      <div id="timelineBody">
+        <div class="loading"><div class="spinner"></div> Loading...</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -782,6 +961,7 @@ const pageTitles = {
   recipients: ['Recipients','Faculty & Personnel'],
   notifications: ['Notifications','Activity feed'],
   reports: ['Reports','Tracking & analytics'],
+  'memo-detail': ['Memo Detail','Delivery & recipient status'],
 };
 function showView(name, el) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -822,6 +1002,17 @@ async function loadDashboard() {
     document.getElementById('statSent').textContent = sent || 0;
     document.getElementById('statPending').textContent = Math.max(0, (rcptTotal||0) - (ackCount||0));
     document.getElementById('statFeedback').textContent = fbCount || 0;
+    // Load notification delivery stats
+    const [{ count: smsSent }, { count: smsFail }, { count: emailSent }, { count: emailFail }] = await Promise.all([
+      sb.from('notifications').select('*',{count:'exact',head:true}).eq('type','sms').eq('status','sent'),
+      sb.from('notifications').select('*',{count:'exact',head:true}).eq('type','sms').eq('status','failed'),
+      sb.from('notifications').select('*',{count:'exact',head:true}).eq('type','email').eq('status','sent'),
+      sb.from('notifications').select('*',{count:'exact',head:true}).eq('type','email').eq('status','failed'),
+    ]);
+    document.getElementById('statSMSSent').textContent = smsSent || 0;
+    document.getElementById('statSMSFailed').textContent = smsFail || 0;
+    document.getElementById('statEmailSent').textContent = emailSent || 0;
+    document.getElementById('statEmailFailed').textContent = emailFail || 0;
   } else {
     const { count: myTotal } = await sb.from('memo_recipients').select('*', { count: 'exact', head: true }).eq('user_id', currentUser.id);
     const { count: myRead } = await sb.from('acknowledgements').select('*', { count: 'exact', head: true }).eq('user_id', currentUser.id);
@@ -843,6 +1034,8 @@ function renderMemoTable(tbodyId, memos, cols) {
     tbody.innerHTML = '<tr><td colspan="' + (cols||7) + '" class="empty-row">No memos found.</td></tr>';
     return;
   }
+  const isDashboard = tbodyId === 'dashboardMemoTable';
+  const isAdmin = currentProfile?.role === 'admin';
   tbody.innerHTML = memos.map(m => {
     const date = new Date(m.created_at).toLocaleDateString('en-PH', { month:'short', day:'numeric', year:'numeric' });
     const pClass = m.priority === 'High' ? 'p-high' : m.priority === 'Medium' ? 'p-med' : 'p-low';
@@ -850,18 +1043,47 @@ function renderMemoTable(tbodyId, memos, cols) {
     const refNo = tbodyId === 'allMemosTable'
       ? `<td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">${m.ref_number || '—'}</td>` : '';
     const cat = tbodyId === 'allMemosTable' ? `<td>${m.category}</td>` : '';
-    return `<tr class="clickable">
-      ${refNo}
-      <td>${m.subject}</td>
-      ${cat}
+    const notifCols = (isDashboard && isAdmin)
+      ? `<td><span id="sms-${m.id}" style="font-size:11px;font-family:monospace">...</span></td>
+         <td><span id="email-${m.id}" style="font-size:11px;font-family:monospace">...</span></td>` : '';
+    return `<tr class="clickable" data-memo-id="${m.id}">
+      ${refNo}<td>${m.subject}</td>${cat}
       <td>${date}</td>
       <td><span class="priority-tag ${pClass}">${(m.priority||'').toUpperCase().slice(0,3)}</span></td>
       <td><span class="status-pill ${sClass}">${m.status}</span></td>
       <td><span class="read-rate" id="rate-${m.id}">...</span></td>
+      ${notifCols}
     </tr>`;
   }).join('');
-  // Load read rates async
-  memos.forEach(m => loadReadRate(m.id));
+  tbody.querySelectorAll('tr[data-memo-id]').forEach(row => {
+    row.addEventListener('click', () => {
+      const isAdmin = currentProfile?.role === 'admin';
+      const isMemoView = tbodyId === 'allMemosTable' || tbodyId === 'dashboardMemoTable';
+      if (isAdmin && isMemoView) {
+        detailPreviousView = tbodyId === 'allMemosTable' ? 'memos' : 'dashboard';
+        openMemoDetail(row.dataset.memoId);
+      } else {
+        openPanel(row.dataset.memoId);
+      }
+    });
+  });
+  memos.forEach(m => {
+    loadReadRate(m.id);
+    if (isDashboard && isAdmin) loadNotifStats(m.id);
+  });
+}
+
+async function loadNotifStats(memoId) {
+  const [{ count: smsSent }, { count: smsFail }, { count: emailSent }, { count: emailFail }] = await Promise.all([
+    sb.from('notifications').select('*',{count:'exact',head:true}).eq('memo_id',memoId).eq('type','sms').eq('status','sent'),
+    sb.from('notifications').select('*',{count:'exact',head:true}).eq('memo_id',memoId).eq('type','sms').eq('status','failed'),
+    sb.from('notifications').select('*',{count:'exact',head:true}).eq('memo_id',memoId).eq('type','email').eq('status','sent'),
+    sb.from('notifications').select('*',{count:'exact',head:true}).eq('memo_id',memoId).eq('type','email').eq('status','failed'),
+  ]);
+  const smsEl = document.getElementById('sms-' + memoId);
+  const emailEl = document.getElementById('email-' + memoId);
+  if (smsEl) smsEl.innerHTML = `<span style="color:var(--accent)">${smsSent||0}✓</span>${(smsFail||0)>0?` <span style="color:var(--danger)">${smsFail}✗</span>`:''}`;
+  if (emailEl) emailEl.innerHTML = `<span style="color:var(--accent)">${emailSent||0}✓</span>${(emailFail||0)>0?` <span style="color:var(--danger)">${emailFail}✗</span>`:''}`;
 }
 
 async function loadReadRate(memoId) {
@@ -1287,135 +1509,31 @@ async function submitReply(feedbackId) {
 }
 
 // ══════════════════════════════════════
-// EMAIL — RESEND
+// NOTIFICATIONS — SUPABASE EDGE FUNCTION
+// Calls our deployed send-notifications function
+// which handles both SMS (Semaphore) and Email (Resend)
+// from the server side, avoiding CORS issues
 // ══════════════════════════════════════
-const RESEND_API_KEY = 're_ZMQDjaTF_4RQLhuhw3J1b4hiUGE3svLvG';
-const RESEND_FROM    = 'weMemo <onboarding@resend.dev>';
-const RESEND_URL     = 'https://api.resend.com/emails';
+const EDGE_FUNCTION_URL = 'https://bmkzhjbshjjqdjzrnwua.supabase.co/functions/v1/send-notifications';
 
-function buildEmailHTML(subject, content, priority, recipientName) {
-  const priorityColor = priority === 'High' ? '#ef4444' : priority === 'Medium' ? '#f59e0b' : '#00c896';
-  const priorityLabel = priority === 'High' ? '🔴 URGENT' : priority === 'Medium' ? '🟡 MEDIUM' : '🟢 ROUTINE';
-  return `<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#0d1117;font-family:'Segoe UI',sans-serif">
-  <div style="max-width:560px;margin:32px auto;background:#161b22;border-radius:12px;overflow:hidden;border:1px solid #2a3341">
-    <div style="background:linear-gradient(135deg,#00c896,#0099ff);padding:28px 32px">
-      <div style="font-size:24px;font-weight:700;color:#000;letter-spacing:-1px">weMemo</div>
-      <div style="font-size:11px;color:rgba(0,0,0,0.6);letter-spacing:2px;text-transform:uppercase;margin-top:2px">CHMSC-Alijis Memorandum System</div>
-    </div>
-    <div style="padding:28px 32px">
-      <div style="display:inline-block;background:${priorityColor}22;color:${priorityColor};font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:1px;margin-bottom:16px">${priorityLabel}</div>
-      <h2 style="color:#e6edf3;font-size:18px;margin:0 0 8px">${subject}</h2>
-      <p style="color:#7d8fa3;font-size:13px;margin:0 0 20px">Dear ${recipientName},</p>
-      <div style="background:#1e2530;border-radius:8px;padding:18px;border-left:3px solid ${priorityColor};color:#e6edf3;font-size:14px;line-height:1.7;margin-bottom:24px">${content.replace(/\n/g,'<br>')}</div>
-      <p style="color:#7d8fa3;font-size:13px;margin:0 0 20px">Please log in to weMemo to <strong style="color:#00c896">acknowledge receipt</strong> of this memorandum.</p>
-      <div style="background:#0d1117;border-radius:8px;padding:14px 18px;font-size:12px;color:#7d8fa3;border:1px solid #2a3341">
-        This is an automated notification from the weMemo system of Carlos Hilado Memorial State College – Alijis Campus.
-      </div>
-    </div>
-    <div style="padding:16px 32px;border-top:1px solid #2a3341;font-size:11px;color:#7d8fa3;text-align:center">
-      © ${new Date().getFullYear()} CHMSC-Alijis · weMemo Notification System
-    </div>
-  </div>
-</body>
-</html>`;
-}
-
-async function sendEmail(toEmail, toName, subject, content, priority) {
-  if (!toEmail) return { success: false, error: 'No email address' };
+async function sendNotifications(users, subject, content, priority) {
   try {
-    const res = await fetch(RESEND_URL, {
+    const { data: { session } } = await sb.auth.getSession();
+    const res = await fetch(EDGE_FUNCTION_URL, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.access_token}`,
       },
-      body: JSON.stringify({
-        from: RESEND_FROM,
-        to: [toEmail],
-        subject: `[weMemo] ${subject}`,
-        html: buildEmailHTML(subject, content, priority, toName)
-      })
+      body: JSON.stringify({ users, subject, content, priority })
     });
     const json = await res.json();
-    if (json.id) return { success: true };
-    return { success: false, error: JSON.stringify(json) };
+    if (json.error) { console.error('Edge function error:', json.error); return null; }
+    return json; // { sms: { sent, failed, noPhone }, email: { sent, failed, noEmail } }
   } catch (err) {
-    return { success: false, error: err.message };
+    console.error('Failed to call edge function:', err);
+    return null;
   }
-}
-
-async function sendBulkEmail(users, subject, content, priority) {
-  let sent = 0, failed = 0;
-  const results = await Promise.allSettled(
-    users
-      .filter(u => u.email)
-      .map(u => sendEmail(u.email, u.full_name || 'Recipient', subject, content, priority))
-  );
-  results.forEach(r => {
-    if (r.status === 'fulfilled' && r.value?.success) sent++;
-    else failed++;
-  });
-  const noEmail = users.filter(u => !u.email).length;
-  return { sent, failed, noEmail };
-}
-
-// ══════════════════════════════════════
-// SMS — SEMAPHORE
-// ══════════════════════════════════════
-const SEMAPHORE_API_KEY = 'a083006919b2f16aecc1cd1d5f763282';
-const SEMAPHORE_SENDER  = 'WEMEMO';
-const SEMAPHORE_URL     = 'https://api.semaphore.co/api/v4/messages';
-
-// Format PH phone number to 11-digit local format
-function formatPhone(phone) {
-  if (!phone) return null;
-  const cleaned = phone.replace(/\D/g, '');
-  if (cleaned.startsWith('63') && cleaned.length === 12) return '0' + cleaned.slice(2);
-  if (cleaned.startsWith('9') && cleaned.length === 10) return '0' + cleaned;
-  if (cleaned.startsWith('09') && cleaned.length === 11) return cleaned;
-  return null;
-}
-
-async function sendSMS(phoneNumber, message) {
-  const phone = formatPhone(phoneNumber);
-  if (!phone) return { success: false, error: 'Invalid phone number: ' + phoneNumber };
-  try {
-    const body = new URLSearchParams({
-      apikey: SEMAPHORE_API_KEY,
-      number: phone,
-      message: message,
-      sendername: SEMAPHORE_SENDER
-    });
-    const res = await fetch(SEMAPHORE_URL, { method: 'POST', body });
-    const json = await res.json();
-    // Semaphore returns array of message objects on success
-    if (Array.isArray(json) && json[0]?.message_id) return { success: true };
-    return { success: false, error: JSON.stringify(json) };
-  } catch (err) {
-    return { success: false, error: err.message };
-  }
-}
-
-async function sendBulkSMS(users, subject, priority) {
-  const priorityLabel = priority === 'High' ? '🔴 URGENT' : priority === 'Medium' ? '🟡' : '🟢';
-  const msg = `${priorityLabel} weMemo: New memorandum released.\n\nSubject: ${subject}\n\nPlease log in to weMemo to read and acknowledge this memo.\n\n- CHMSC-Alijis Admin`;
-
-  let sent = 0, failed = 0;
-  const results = await Promise.allSettled(
-    users
-      .filter(u => u.phone_number)
-      .map(u => sendSMS(u.phone_number, msg))
-  );
-  results.forEach(r => {
-    if (r.status === 'fulfilled' && r.value?.success) sent++;
-    else failed++;
-  });
-
-  const noPhone = users.filter(u => !u.phone_number).length;
-  return { sent, failed, noPhone };
 }
 
 // ══════════════════════════════════════
@@ -1463,19 +1581,19 @@ async function sendMemo(isDraft = false) {
         const rcpts = users.map(u => ({ memo_id: memo.id, user_id: u.id }));
         await sb.from('memo_recipients').insert(rcpts);
 
-        // Fire SMS
-        btn.textContent = 'Sending SMS...';
-        smsResult = await sendBulkSMS(users, subject, priority);
-
-        // Fire Emails
-        btn.textContent = 'Sending Emails...';
-        emailResult = await sendBulkEmail(users, subject, content, priority);
+        // Call Edge Function — handles SMS + Email server-side (no CORS issues)
+        btn.textContent = 'Sending notifications...';
+        const notifResult = await sendNotificationsWithId(users, subject, content, priority, memo.id);
+        if (notifResult) {
+          smsResult   = notifResult.sms;
+          emailResult = notifResult.email;
+        }
 
         // Log all notifications to DB
         const notifRows = [];
         users.forEach(u => {
-          if (u.phone_number) notifRows.push({ memo_id: memo.id, user_id: u.id, type: 'sms', status: 'sent' });
-          if (u.email) notifRows.push({ memo_id: memo.id, user_id: u.id, type: 'email', status: 'sent' });
+          if (u.phone_number) notifRows.push({ memo_id: memo.id, user_id: u.id, type: 'sms', status: smsResult ? 'sent' : 'failed' });
+          if (u.email) notifRows.push({ memo_id: memo.id, user_id: u.id, type: 'email', status: emailResult ? 'sent' : 'failed' });
         });
         if (notifRows.length > 0) await sb.from('notifications').insert(notifRows);
       }
@@ -1518,6 +1636,436 @@ function showToast(msg, icon = '✅', isError = false) {
   toast.className = 'toast show' + (isError ? ' error' : '');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+
+// ══════════════════════════════════════
+// PHASE 1 — MEMO DETAIL VIEW
+// ══════════════════════════════════════
+const DELIVERY_ACTION_URL = 'https://bmkzhjbshjjqdjzrnwua.supabase.co/functions/v1/send-delivery-action';
+const DETAIL_PAGE_SIZE = 25;
+
+// State for the detail view
+let detailMemoId      = null;
+let detailMemo        = null;
+let detailRecipients  = [];   // full enriched rows
+let detailPage        = 0;
+let detailAckedIds    = new Set();
+let detailDelivery    = {};   // { userId: { email: attempt|null, sms: attempt|null } }
+
+// ── Navigate to Memo Detail ──────────────────────────────
+function openMemoDetail(memoId) {
+  detailMemoId = memoId;
+  detailPage   = 0;
+  detailRecipients = [];
+  detailDelivery   = {};
+  detailAckedIds   = new Set();
+  showView('memo-detail', null);
+  // un-highlight all nav items since this is a sub-view
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  loadMemoDetail(memoId);
+}
+
+function closeMemoDetail() {
+  // Navigate back to whichever list view makes sense
+  const prevView = detailPreviousView || 'dashboard';
+  const navEl = document.getElementById('nav-' + prevView);
+  showView(prevView, navEl);
+  if (navEl) navEl.classList.add('active');
+}
+
+let detailPreviousView = 'dashboard';
+
+// ── Load all data for the detail view ───────────────────
+async function loadMemoDetail(memoId) {
+  // Render skeleton
+  document.getElementById('detailMemoTitle').textContent = 'Loading...';
+  document.getElementById('detailMetaGrid').innerHTML = '';
+  document.getElementById('detailRecipientBody').innerHTML =
+    '<tr><td colspan="9" class="empty-row"><div class="loading"><div class="spinner"></div> Loading...</div></td></tr>';
+
+  // 1. Fetch memo with creator profile
+  const { data: memo } = await sb.from('memos')
+    .select('*, profiles!memos_created_by_fkey(full_name)')
+    .eq('id', memoId).single();
+  if (!memo) {
+    document.getElementById('detailMemoTitle').textContent = 'Memo not found.';
+    return;
+  }
+  detailMemo = memo;
+
+  // Render header
+  document.getElementById('detailMemoTitle').textContent = memo.subject;
+  const pClass = memo.priority === 'High' ? 'p-high' : memo.priority === 'Medium' ? 'p-med' : 'p-low';
+  const sClass = memo.status === 'Sent' ? 'pill-sent' : memo.status === 'Pending' ? 'pill-pending' : 'pill-draft';
+  const sentAt = memo.sent_at ? new Date(memo.sent_at).toLocaleString('en-PH', { month:'short', day:'numeric', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '—';
+  document.getElementById('detailMetaGrid').innerHTML = `
+    <div class="detail-meta-item"><div class="detail-meta-key">Ref No.</div><div class="detail-meta-val" style="font-family:'Space Mono',monospace;font-size:12px">${memo.ref_number || '—'}</div></div>
+    <div class="detail-meta-item"><div class="detail-meta-key">Category</div><div class="detail-meta-val">${memo.category || '—'}</div></div>
+    <div class="detail-meta-item"><div class="detail-meta-key">Priority</div><div class="detail-meta-val"><span class="priority-tag ${pClass}">${(memo.priority||'').toUpperCase()}</span></div></div>
+    <div class="detail-meta-item"><div class="detail-meta-key">Status</div><div class="detail-meta-val"><span class="status-pill ${sClass}">${memo.status}</span></div></div>
+    <div class="detail-meta-item"><div class="detail-meta-key">Sent At</div><div class="detail-meta-val">${sentAt}</div></div>
+    <div class="detail-meta-item"><div class="detail-meta-key">Created By</div><div class="detail-meta-val">${memo.profiles?.full_name || '—'}</div></div>`;
+
+  // 2. Fetch recipients with profiles
+  const { data: rcptRows } = await sb.from('memo_recipients')
+    .select('user_id, profiles(id, full_name, role, email, phone_number)')
+    .eq('memo_id', memoId);
+
+  // 3. Fetch acknowledgements
+  const { data: ackRows } = await sb.from('acknowledgements')
+    .select('user_id, acknowledged_at').eq('memo_id', memoId);
+  detailAckedIds = new Set((ackRows||[]).map(a => a.user_id));
+  const ackMap = {};
+  (ackRows||[]).forEach(a => { ackMap[a.user_id] = a.acknowledged_at; });
+
+  // 4. Fetch latest delivery status per recipient per channel
+  //    Query memo_delivery_attempts and pick latest per (user_id, channel)
+  const { data: attempts } = await sb.from('memo_delivery_attempts')
+    .select('user_id, channel, attempt_type, status, error_message, provider_message_id, created_at')
+    .eq('memo_id', memoId)
+    .order('created_at', { ascending: false });
+
+  // Build detailDelivery map: latest attempt per user+channel
+  detailDelivery = {};
+  (attempts||[]).forEach(a => {
+    if (!detailDelivery[a.user_id]) detailDelivery[a.user_id] = {};
+    if (!detailDelivery[a.user_id][a.channel]) {
+      // first seen = latest (because ordered desc)
+      detailDelivery[a.user_id][a.channel] = a;
+    }
+  });
+
+  // 5. Build enriched recipient rows
+  detailRecipients = (rcptRows||[]).map(r => {
+    const p = r.profiles || {};
+    return {
+      user_id:      p.id || r.user_id,
+      full_name:    p.full_name || 'Unknown',
+      role:         p.role || '—',
+      email:        p.email || '',
+      phone_number: p.phone_number || '',
+      acked:        detailAckedIds.has(p.id || r.user_id),
+      acked_at:     ackMap[p.id || r.user_id] || null,
+      email_status: (detailDelivery[p.id || r.user_id] || {}).email || null,
+      sms_status:   (detailDelivery[p.id || r.user_id] || {}).sms   || null,
+    };
+  });
+
+  // 6. Render read rate summary
+  const total  = detailRecipients.length;
+  const acked  = detailRecipients.filter(r => r.acked).length;
+  const unread = total - acked;
+  const rate   = total ? Math.round((acked / total) * 100) : 0;
+  document.getElementById('detailReadRate').textContent    = rate + '%';
+  document.getElementById('detailReadFraction').textContent = `(${acked} / ${total})`;
+  document.getElementById('detailUnread').textContent      = unread;
+
+  // SMS / Email delivery summaries
+  const smsSent    = detailRecipients.filter(r => r.sms_status?.status === 'sent').length;
+  const smsFailed  = detailRecipients.filter(r => r.sms_status?.status === 'failed').length;
+  const emailSent  = detailRecipients.filter(r => r.email_status?.status === 'sent').length;
+  const emailFailed= detailRecipients.filter(r => r.email_status?.status === 'failed').length;
+  document.getElementById('detailSMSSummary').innerHTML =
+    `<span style="color:var(--accent)">${smsSent}✓</span> <span style="color:var(--danger)">${smsFailed}✗</span>`;
+  document.getElementById('detailEmailSummary').innerHTML =
+    `<span style="color:var(--accent)">${emailSent}✓</span> <span style="color:var(--danger)">${emailFailed}✗</span>`;
+
+  // 7. Render table
+  renderDetailTable();
+}
+
+// ── Render paginated recipient table ────────────────────
+function renderDetailTable(subset) {
+  const rows   = subset || detailRecipients;
+  const total  = rows.length;
+  const start  = detailPage * DETAIL_PAGE_SIZE;
+  const end    = Math.min(start + DETAIL_PAGE_SIZE, total);
+  const page   = rows.slice(start, end);
+
+  document.getElementById('detailPageInfo').textContent =
+    total ? `Showing ${start+1}–${end} of ${total}` : '0 recipients';
+  document.getElementById('detailPrevBtn').disabled = detailPage === 0;
+  document.getElementById('detailNextBtn').disabled = end >= total;
+
+  const tbody = document.getElementById('detailRecipientBody');
+  if (!page.length) {
+    tbody.innerHTML = '<tr><td colspan="9" class="empty-row">No recipients found.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = page.map(r => {
+    const initials  = r.full_name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const roleClass = { admin:'role-admin', faculty:'role-faculty', gass:'role-gass', dean:'role-dean' }[r.role] || 'role-faculty';
+    const roleLabel = { admin:'Admin', faculty:'Faculty', gass:'GASS', dean:'Dean' }[r.role] || r.role;
+
+    const ackCell = r.acked
+      ? `<span class="delivery-chip chip-sent">✅ Read</span>
+         <span class="chip-time">${r.acked_at ? new Date(r.acked_at).toLocaleDateString('en-PH',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : ''}</span>`
+      : `<span class="delivery-chip chip-pending">⏳ Unread</span>`;
+
+    const emailCell = deliveryChip(r.email_status);
+    const smsCell   = deliveryChip(r.sms_status);
+
+    return `<tr data-uid="${r.user_id}">
+      <td><input type="checkbox" class="rcpt-checkbox row-check" data-uid="${r.user_id}" /></td>
+      <td>
+        <div class="user-avatar-cell">
+          <div class="user-avatar-sm">${initials}</div>
+          <span style="font-weight:600">${r.full_name}</span>
+        </div>
+      </td>
+      <td><span class="role-badge ${roleClass}">${roleLabel}</span></td>
+      <td style="font-size:12px;color:var(--muted)">${r.email || '—'}</td>
+      <td style="font-size:12px">${r.phone_number || '—'}</td>
+      <td>${ackCell}</td>
+      <td>${emailCell}</td>
+      <td>${smsCell}</td>
+      <td>
+        <div class="action-btns" style="flex-wrap:wrap;gap:4px">
+          <button class="btn-inline email" data-uid="${r.user_id}" data-action="resend" data-channel="email">📧 Resend</button>
+          <button class="btn-inline sms"   data-uid="${r.user_id}" data-action="resend" data-channel="sms">📱 Resend</button>
+          <button class="btn-inline remind" data-uid="${r.user_id}" data-action="reminder" data-channel="both">⏰ Remind</button>
+          <button class="btn-inline timeline" data-uid="${r.user_id}" data-name="${r.full_name}" data-action="timeline">🕐 Timeline</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // Wire up row action buttons
+  tbody.querySelectorAll('[data-action]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const action  = btn.dataset.action;
+      const uid     = btn.dataset.uid;
+      const channel = btn.dataset.channel;
+      if (action === 'timeline') {
+        openTimeline(uid, btn.dataset.name);
+      } else {
+        runDeliveryAction([uid], channel, action, btn);
+      }
+    });
+  });
+
+  // Check-all wiring
+  const checkAll = document.getElementById('checkAll');
+  if (checkAll) {
+    checkAll.checked = false;
+    checkAll.onchange = () => {
+      tbody.querySelectorAll('.row-check').forEach(cb => cb.checked = checkAll.checked);
+    };
+  }
+}
+
+function deliveryChip(attempt) {
+  if (!attempt) return '<span class="delivery-chip chip-none">—</span>';
+  const icon  = attempt.status === 'sent' ? '✓' : '✗';
+  const cls   = attempt.status === 'sent' ? 'chip-sent' : 'chip-failed';
+  const label = attempt.attempt_type === 'initial' ? '' : ` (${attempt.attempt_type})`;
+  const time  = new Date(attempt.created_at).toLocaleDateString('en-PH',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  return `<span class="delivery-chip ${cls}">${icon}${label}</span><span class="chip-time">${time}</span>`;
+}
+
+// ── Quick selectors ──────────────────────────────────────
+function getSelectedUids() {
+  return [...document.querySelectorAll('.row-check:checked')].map(cb => cb.dataset.uid);
+}
+
+function quickSelect(filterFn) {
+  document.querySelectorAll('.row-check').forEach(cb => {
+    const uid = cb.dataset.uid;
+    const row = detailRecipients.find(r => r.user_id === uid);
+    cb.checked = row ? filterFn(row) : false;
+  });
+}
+
+// ── Run delivery action (individual or bulk) ─────────────
+async function runDeliveryAction(userIds, channel, actionType, triggerEl) {
+  if (!userIds.length) { showToast('No recipients selected.', '⚠️', true); return; }
+  if (!detailMemoId)   { showToast('No memo loaded.', '❌', true); return; }
+
+  const label = triggerEl?.textContent?.trim() || '...';
+  if (triggerEl) { triggerEl.textContent = '⏳'; triggerEl.disabled = true; }
+
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    const res = await fetch(DELIVERY_ACTION_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.access_token}`,
+      },
+      body: JSON.stringify({
+        memo_id:     detailMemoId,
+        user_ids:    userIds,
+        channel:     channel,
+        action_type: actionType,
+      }),
+    });
+    const json = await res.json();
+
+    if (json.error) {
+      showToast(`Error: ${json.error}`, '❌', true);
+    } else {
+      const { targeted, succeeded, failed } = json;
+      showToast(
+        `${actionType === 'reminder' ? '⏰ Reminder' : '📨 Resend'}: ${targeted} targeted, ${succeeded} succeeded, ${failed} failed`,
+        succeeded > 0 ? '✅' : '❌',
+        failed > 0 && succeeded === 0
+      );
+      // Refresh the detail view to show updated delivery statuses
+      await loadMemoDetail(detailMemoId);
+    }
+  } catch (err) {
+    showToast('Network error: ' + err.message, '❌', true);
+  } finally {
+    if (triggerEl) { triggerEl.textContent = label; triggerEl.disabled = false; }
+  }
+}
+
+// ── Timeline modal ───────────────────────────────────────
+async function openTimeline(userId, userName) {
+  document.getElementById('timelineRecipientName').textContent = userName;
+  document.getElementById('timelineBody').innerHTML =
+    '<div class="loading"><div class="spinner"></div> Loading...</div>';
+  document.getElementById('timelineModal').classList.add('open');
+
+  // Fetch all delivery attempts for this user+memo
+  const { data: attempts } = await sb.from('memo_delivery_attempts')
+    .select('*')
+    .eq('memo_id', detailMemoId)
+    .eq('user_id', userId)
+    .order('created_at', { ascending: true });
+
+  // Fetch acknowledgement
+  const { data: ack } = await sb.from('acknowledgements')
+    .select('acknowledged_at')
+    .eq('memo_id', detailMemoId)
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  // Build timeline items
+  const items = [];
+  (attempts||[]).forEach(a => {
+    const icon  = a.channel === 'email' ? '📧' : '📱';
+    const ts    = new Date(a.created_at).toLocaleString('en-PH',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    const lbl   = `${a.channel.toUpperCase()} ${a.attempt_type} — ${a.status.toUpperCase()}`;
+    items.push({
+      ts: a.created_at, icon, label: lbl, status: a.status,
+      sub: a.provider_message_id ? `ID: ${a.provider_message_id}` : '',
+      error: a.error_message || '',
+      time: ts,
+    });
+  });
+
+  if (ack) {
+    const ts = new Date(ack.acknowledged_at).toLocaleString('en-PH',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    items.push({ ts: ack.acknowledged_at, icon:'✅', label:'Memo Acknowledged', status:'ack', sub:'', error:'', time: ts });
+  }
+
+  items.sort((a,b) => new Date(a.ts) - new Date(b.ts));
+
+  if (!items.length) {
+    document.getElementById('timelineBody').innerHTML =
+      '<div class="tl-empty">No delivery activity yet for this recipient.</div>';
+    return;
+  }
+
+  document.getElementById('timelineBody').innerHTML = `
+    <div class="timeline">${items.map(item => {
+      const dotCls = item.status === 'sent' ? 'sent' : item.status === 'ack' ? 'ack' : 'failed';
+      return `<div class="tl-item">
+        <div class="tl-dot ${dotCls}">${item.icon}</div>
+        <div class="tl-body">
+          <div class="tl-title">${item.label}</div>
+          ${item.sub  ? `<div class="tl-sub">${item.sub}</div>` : ''}
+          ${item.error ? `<div class="tl-error">⚠ ${item.error}</div>` : ''}
+          <div class="tl-time">${item.time}</div>
+        </div>
+      </div>`;
+    }).join('')}
+    </div>`;
+}
+
+function closeTimeline() {
+  document.getElementById('timelineModal').classList.remove('open');
+}
+
+// ── Update sendNotifications to pass memo_id ─────────────
+// (Replaces the call site in sendMemo — memo_id is now forwarded)
+async function sendNotificationsWithId(users, subject, content, priority, memoId) {
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    const res = await fetch(EDGE_FUNCTION_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.access_token}`,
+      },
+      body: JSON.stringify({ users, subject, content, priority, memo_id: memoId }),
+    });
+    const json = await res.json();
+    if (json.error) { console.error('Edge function error:', json.error); return null; }
+    return json;
+  } catch (err) {
+    console.error('sendNotificationsWithId error:', err);
+    return null;
+  }
+}
+
+
+// ══════════════════════════════════════
+// TEST NOTIFICATION
+// ══════════════════════════════════════
+async function testNotification() {
+  const log = document.getElementById('debugLog');
+  const btn = document.getElementById('testNotifBtn');
+  if (!currentProfile) return;
+  btn.textContent = 'Testing...'; btn.disabled = true;
+  log.innerHTML = '<span style="color:var(--warn)">⏳ Calling Edge Function...</span>';
+
+  const testUser = [{
+    id: currentProfile.id,
+    full_name: currentProfile.full_name,
+    email: currentProfile.email,
+    phone_number: currentProfile.phone_number
+  }];
+
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    const res = await fetch('https://bmkzhjbshjjqdjzrnwua.supabase.co/functions/v1/send-notifications', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.access_token}`,
+      },
+      body: JSON.stringify({
+        users: testUser,
+        subject: 'weMemo Test Notification',
+        content: 'This is a test message from weMemo. If you receive this, SMS and email notifications are working correctly!',
+        priority: 'High'
+      })
+    });
+    const json = await res.json();
+    console.log('Edge function response:', json);
+
+    if (json.error) {
+      log.innerHTML = `<span style="color:var(--danger)">❌ Edge Function Error: ${json.error}</span>`;
+    } else {
+      const sms = json.sms || {};
+      const email = json.email || {};
+      log.innerHTML = `
+        <div style="margin-bottom:8px;color:var(--text)">✅ Edge Function called successfully</div>
+        <div style="margin-bottom:4px">📱 SMS → Sent: <span style="color:var(--accent)">${sms.sent||0}</span> | Failed: <span style="color:var(--danger)">${sms.failed||0}</span> | No Phone: <span style="color:var(--muted)">${sms.noPhone||0}</span></div>
+        <div style="margin-bottom:4px">📧 Email → Sent: <span style="color:var(--accent)">${email.sent||0}</span> | Failed: <span style="color:var(--danger)">${email.failed||0}</span> | No Email: <span style="color:var(--muted)">${email.noEmail||0}</span></div>
+        <div style="margin-top:8px;color:var(--muted);font-size:11px">Your profile: phone=${currentProfile.phone_number||'NOT SET'} | email=${currentProfile.email||'NOT SET'}</div>
+        <div style="margin-top:4px;color:var(--muted);font-size:11px">Raw response: ${JSON.stringify(json)}</div>`;
+    }
+  } catch (err) {
+    log.innerHTML = `<span style="color:var(--danger)">❌ Fetch Error: ${err.message}</span>`;
+    console.error('Test notification error:', err);
+  }
+  btn.textContent = 'Test SMS & Email'; btn.disabled = false;
 }
 
 // ══════════════════════════════════════
@@ -1605,6 +2153,46 @@ function bindEvents() {
 
   // Add user — second close button (cancel)
   document.querySelectorAll('[id="closeAddUserBtn"]').forEach(b => b.addEventListener('click', closeAddUser));
+
+  // Test notification button
+  const testBtn = document.getElementById('testNotifBtn');
+  if (testBtn) testBtn.addEventListener('click', testNotification);
+
+  // ── Phase 1: Memo Detail ──
+  const detailBackBtn = document.getElementById('detailBackBtn');
+  if (detailBackBtn) detailBackBtn.addEventListener('click', closeMemoDetail);
+
+  // Pagination
+  const detailPrevBtn = document.getElementById('detailPrevBtn');
+  const detailNextBtn = document.getElementById('detailNextBtn');
+  if (detailPrevBtn) detailPrevBtn.addEventListener('click', () => { detailPage--; renderDetailTable(); });
+  if (detailNextBtn) detailNextBtn.addEventListener('click', () => { detailPage++; renderDetailTable(); });
+
+  // Quick selectors
+  const qsAll          = document.getElementById('qsAll');
+  const qsNone         = document.getElementById('qsNone');
+  const qsUnread       = document.getElementById('qsUnread');
+  const qsEmailFailed  = document.getElementById('qsEmailFailed');
+  const qsSmsFailed    = document.getElementById('qsSmsFailed');
+  const qsNotAttempted = document.getElementById('qsNotAttempted');
+  if (qsAll)          qsAll.addEventListener('click', () => quickSelect(() => true));
+  if (qsNone)         qsNone.addEventListener('click', () => quickSelect(() => false));
+  if (qsUnread)       qsUnread.addEventListener('click', () => quickSelect(r => !r.acked));
+  if (qsEmailFailed)  qsEmailFailed.addEventListener('click', () => quickSelect(r => r.email_status?.status === 'failed'));
+  if (qsSmsFailed)    qsSmsFailed.addEventListener('click', () => quickSelect(r => r.sms_status?.status === 'failed'));
+  if (qsNotAttempted) qsNotAttempted.addEventListener('click', () => quickSelect(r => !r.email_status && !r.sms_status));
+
+  // Bulk actions
+  const bulkResendEmail   = document.getElementById('bulkResendEmail');
+  const bulkResendSms     = document.getElementById('bulkResendSms');
+  const bulkReminderBoth  = document.getElementById('bulkReminderBoth');
+  if (bulkResendEmail)  bulkResendEmail.addEventListener('click', () => runDeliveryAction(getSelectedUids(), 'email', 'resend', bulkResendEmail));
+  if (bulkResendSms)    bulkResendSms.addEventListener('click', () => runDeliveryAction(getSelectedUids(), 'sms', 'resend', bulkResendSms));
+  if (bulkReminderBoth) bulkReminderBoth.addEventListener('click', () => runDeliveryAction(getSelectedUids(), 'both', 'reminder', bulkReminderBoth));
+
+  // Timeline modal close
+  const closeTimelineBtn = document.getElementById('closeTimelineBtn');
+  if (closeTimelineBtn) closeTimelineBtn.addEventListener('click', closeTimeline);
 }
 
 bindEvents();
