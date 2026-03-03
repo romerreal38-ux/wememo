@@ -317,6 +317,89 @@
   .tl-time { font-size:10px; color:var(--muted); font-family:'Space Mono',monospace; margin-top:3px; }
   .tl-error { font-size:11px; color:var(--danger); background:rgba(239,68,68,.08); border-radius:4px; padding:4px 8px; margin-top:4px; font-family:monospace; }
   .tl-empty { padding:24px; text-align:center; color:var(--muted); font-size:13px; }
+  /* ── CALENDAR VIEW ── */
+  .cal-wrap { user-select:none; }
+  .cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+  .cal-nav-btn { background:var(--surface2); border:1px solid var(--border); color:var(--text); border-radius:7px; padding:7px 14px; font-size:13px; cursor:pointer; font-family:'Sora',sans-serif; transition:all .12s; }
+  .cal-nav-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .cal-month-label { font-size:18px; font-weight:700; font-family:'Space Mono',monospace; color:var(--text); }
+  .cal-today-btn { font-size:11px; padding:4px 12px; border-radius:5px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; font-family:'Sora',sans-serif; transition:all .12s; margin-left:10px; }
+  .cal-today-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; background:var(--border); border-radius:10px; overflow:hidden; }
+  .cal-day-header { background:var(--surface); padding:8px 4px; text-align:center; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); }
+  .cal-cell { background:var(--surface); min-height:96px; padding:8px; display:flex; flex-direction:column; gap:3px; cursor:pointer; transition:background .1s; position:relative; }
+  .cal-cell:hover { background:var(--surface2); }
+  .cal-cell.cal-today { background:rgba(0,200,150,.05); }
+  .cal-cell.cal-today .cal-date-num { color:var(--accent); background:rgba(0,200,150,.15); border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
+  .cal-cell.cal-other-month { background:var(--bg); }
+  .cal-cell.cal-other-month .cal-date-num { color:var(--border); }
+  .cal-cell.cal-selected { background:rgba(0,153,255,.06); outline:1px solid var(--accent2); }
+  .cal-date-num { font-size:12px; font-weight:700; color:var(--muted); font-family:'Space Mono',monospace; margin-bottom:2px; width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
+  .cal-dot { font-size:10px; padding:2px 6px; border-radius:3px; font-weight:600; line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+  .cal-dot.p-High   { background:rgba(239,68,68,.15);  color:var(--danger); }
+  .cal-dot.p-Medium { background:rgba(245,158,11,.15); color:var(--warn); }
+  .cal-dot.p-Low    { background:rgba(0,200,150,.12);  color:var(--accent); }
+  .cal-dot.p-Draft  { background:rgba(125,143,163,.1); color:var(--muted); }
+  .cal-overflow { font-size:10px; color:var(--muted); padding-left:2px; }
+  .cal-detail-panel { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px 20px; margin-top:20px; min-height:80px; }
+  .cal-detail-title { font-size:12px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); font-weight:600; margin-bottom:14px; }
+  .cal-memo-row { display:flex; align-items:flex-start; gap:12px; padding:10px 12px; background:var(--surface2); border-radius:7px; margin-bottom:6px; cursor:pointer; border:1px solid var(--border); transition:all .12s; }
+  .cal-memo-row:hover { border-color:var(--accent); background:rgba(0,200,150,.04); }
+  .cal-memo-row .cal-memo-subject { font-size:13px; font-weight:600; margin-bottom:3px; }
+  .cal-memo-row .cal-memo-meta { font-size:11px; color:var(--muted); }
+  .cal-deadline-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+  .cal-deadline-dot.sent  { background:var(--accent2); }
+  .cal-deadline-dot.deadline { background:var(--danger); }
+  .cal-legend { display:flex; gap:16px; margin-bottom:14px; flex-wrap:wrap; }
+  .cal-legend-item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--muted); }
+  .cal-legend-dot { width:8px; height:8px; border-radius:2px; }
+
+  /* ── PHASE 3A: DEADLINE ── */
+  .deadline-badge { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-family:'Space Mono',monospace; padding:3px 10px; border-radius:6px; font-weight:600; }
+  .deadline-ok      { background:rgba(0,200,150,.1);  color:var(--accent); }
+  .deadline-soon    { background:rgba(245,158,11,.12); color:var(--warn); }
+  .deadline-overdue { background:rgba(239,68,68,.12);  color:var(--danger); }
+  tr.row-overdue td { background:rgba(239,68,68,.04); }
+  .form-hint { font-size:11px; color:var(--muted); margin-top:4px; }
+
+  /* ── PHASE 3B: VERSIONING ── */
+  .version-tag { font-size:10px; font-family:'Space Mono',monospace; background:rgba(0,153,255,.12); color:var(--accent2); padding:2px 7px; border-radius:4px; font-weight:700; margin-left:6px; }
+  .version-history-item { display:flex; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); }
+  .version-history-item:last-child { border-bottom:none; }
+  .version-num { font-family:'Space Mono',monospace; font-size:11px; color:var(--accent2); font-weight:700; width:32px; flex-shrink:0; padding-top:2px; }
+  .version-meta { flex:1; }
+  .version-subject { font-size:13px; font-weight:600; margin-bottom:2px; }
+  .version-info { font-size:11px; color:var(--muted); }
+  .version-diff { font-size:11px; color:var(--warn); margin-top:3px; }
+  .edit-memo-textarea { width:100%; min-height:120px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:10px 13px; font-size:13px; color:var(--text); font-family:'Sora',sans-serif; outline:none; resize:vertical; }
+  .edit-memo-textarea:focus { border-color:var(--accent); }
+
+  /* ── PHASE 3C: REMINDER RULES ── */
+  .rule-item { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:7px; margin-bottom:6px; }
+  .rule-item.rule-disabled { opacity:.5; }
+  .rule-label { flex:1; font-size:13px; }
+  .rule-sub { font-size:11px; color:var(--muted); margin-top:1px; }
+  .rule-toggle { width:34px; height:18px; border-radius:9px; border:none; cursor:pointer; transition:background .15s; position:relative; flex-shrink:0; }
+  .rule-toggle.on  { background:var(--accent); }
+  .rule-toggle.off { background:var(--border); }
+  .rule-toggle::after { content:''; position:absolute; top:2px; width:14px; height:14px; border-radius:50%; background:#fff; transition:left .15s; }
+  .rule-toggle.on::after  { left:18px; }
+  .rule-toggle.off::after { left:2px; }
+  .rules-add-row { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; align-items:flex-end; }
+  .rules-select { background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:7px 10px; font-size:12px; color:var(--text); font-family:'Sora',sans-serif; outline:none; }
+  .rules-select:focus { border-color:var(--accent); }
+  .rules-num-input { width:70px; background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:7px 10px; font-size:12px; color:var(--text); font-family:'Sora',monospace; outline:none; }
+  .rules-num-input:focus { border-color:var(--accent); }
+
+  /* ── PHASE 3D: QUIET HOURS ── */
+  .quiet-hours-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
+  .quiet-toggle { display:flex; align-items:center; gap:8px; font-size:13px; }
+  .quiet-time-input { background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:6px 10px; font-size:13px; color:var(--text); font-family:'Space Mono',monospace; outline:none; }
+  .quiet-time-input:focus { border-color:var(--warn); }
+  .quiet-days { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+  .quiet-day-btn { padding:4px 10px; font-size:11px; border-radius:5px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; font-family:'Sora',sans-serif; transition:all .12s; }
+  .quiet-day-btn.active { border-color:var(--warn); color:var(--warn); background:rgba(245,158,11,.08); }
+
 
   /* ── PHASE 2: ADD RECIPIENTS MODAL ── */
   .modal-search-input { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:7px; padding:9px 13px; font-size:13px; color:var(--text); font-family:'Sora',sans-serif; outline:none; margin-bottom:10px; }
@@ -472,6 +555,9 @@
         <div class="nav-item admin-only" id="nav-reports" data-view="reports">
           <span class="icon">📈</span> Reports
         </div>
+        <div class="nav-item" id="nav-calendar" data-view="calendar">
+          <span class="icon">📅</span> Calendar
+        </div>
       </nav>
       <div class="user-card">
         <div class="avatar" id="sidebarAvatar">?</div>
@@ -615,6 +701,42 @@
           </div>
         </div>
 
+        <!-- CALENDAR VIEW -->
+        <div class="view" id="view-calendar">
+          <div class="cal-wrap">
+            <!-- Header: month nav + today button -->
+            <div class="cal-header">
+              <div style="display:flex;align-items:center;gap:8px">
+                <button class="cal-nav-btn" id="calPrevBtn">&#8592;</button>
+                <button class="cal-nav-btn" id="calNextBtn">&#8594;</button>
+                <button class="cal-today-btn" id="calTodayBtn">Today</button>
+              </div>
+              <div class="cal-month-label" id="calMonthLabel">—</div>
+              <div class="cal-legend">
+                <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--accent2)"></div> Sent</div>
+                <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--danger)"></div> Deadline</div>
+                <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(125,143,163,.4)"></div> Draft</div>
+              </div>
+            </div>
+            <!-- Day-of-week headers -->
+            <div class="cal-grid" id="calGrid">
+              <div class="cal-day-header">Sun</div>
+              <div class="cal-day-header">Mon</div>
+              <div class="cal-day-header">Tue</div>
+              <div class="cal-day-header">Wed</div>
+              <div class="cal-day-header">Thu</div>
+              <div class="cal-day-header">Fri</div>
+              <div class="cal-day-header">Sat</div>
+              <!-- cells injected by JS -->
+            </div>
+            <!-- Selected-day detail panel -->
+            <div class="cal-detail-panel" id="calDetailPanel">
+              <div class="cal-detail-title" id="calDetailTitle">Select a day to see memos</div>
+              <div id="calDetailList"></div>
+            </div>
+          </div>
+        </div>
+
         <!-- MEMO DETAIL (Phase 1) -->
         <div class="view" id="view-memo-detail">
           <!-- Header card -->
@@ -696,10 +818,75 @@
             </div>
           </div>
 
-          <!-- Phase 2: Action row -->
+          <!-- Phase 3A: Deadline badge (dynamic) -->
+          <div id="detailDeadlineBadge" style="margin-bottom:12px;display:none"></div>
+
+          <!-- Phase 2+3B: Action row -->
           <div class="detail-action-row">
             <button class="btn btn-ghost btn-sm" id="addRecipientsBtn">+ Add Recipients</button>
+            <button class="btn btn-ghost btn-sm admin-only" id="editMemoBtn">✏️ Edit Memo</button>
             <button class="btn btn-ghost btn-sm" id="exportCsvBtn">⬇ Export CSV</button>
+          </div>
+
+          <!-- Phase 3B: Version history section (admin only, collapsible) -->
+          <div class="detail-section admin-only" id="detailVersionSection" style="display:none">
+            <div class="detail-section-title" style="cursor:pointer" id="detailVersionToggle">
+              <span>📝 Version History <span id="detailVersionCount" style="color:var(--muted);font-weight:400"></span></span>
+              <span id="detailVersionChevron" style="font-size:11px;color:var(--muted)">▼</span>
+            </div>
+            <div id="detailVersionList" style="display:none"></div>
+          </div>
+
+          <!-- Phase 3C: Reminder Rules section (admin only) -->
+          <div class="detail-section admin-only" id="detailRulesSection">
+            <div class="detail-section-title">
+              <span>⏰ Auto-Reminder Rules</span>
+              <button class="btn btn-ghost btn-sm" id="saveRulesBtn" style="font-size:11px;padding:3px 10px">Save Rules</button>
+            </div>
+            <div id="detailRulesList"><div class="loading"><div class="spinner"></div></div></div>
+            <div class="rules-add-row">
+              <select class="rules-select" id="rulesTriggerType">
+                <option value="after_send">After send</option>
+                <option value="before_deadline">Before deadline</option>
+              </select>
+              <input class="rules-num-input" type="number" id="rulesHours" value="24" min="1" max="720" />
+              <span style="font-size:12px;color:var(--muted);align-self:center">hours</span>
+              <select class="rules-select" id="rulesChannel">
+                <option value="both">Email + SMS</option>
+                <option value="email">Email only</option>
+                <option value="sms">SMS only</option>
+              </select>
+              <button class="btn btn-ghost btn-sm" id="addRuleBtn">+ Add Rule</button>
+            </div>
+            <div class="form-hint" style="margin-top:6px">Rules run hourly. Only sends to recipients who have not yet acknowledged.</div>
+          </div>
+
+          <!-- Phase 3D: Quiet Hours (admin only, global config) -->
+          <div class="detail-section admin-only" id="detailQuietSection">
+            <div class="detail-section-title">
+              <span>🌙 Quiet Hours <span style="font-size:10px;color:var(--muted);font-weight:400;margin-left:6px">Global — applies to all auto-reminders</span></span>
+              <button class="btn btn-ghost btn-sm" id="saveQuietBtn" style="font-size:11px;padding:3px 10px">Save</button>
+            </div>
+            <div class="quiet-hours-row">
+              <label class="quiet-toggle">
+                <input type="checkbox" id="quietEnabled" style="accent-color:var(--warn)" />
+                Enable quiet hours
+              </label>
+              <span style="font-size:12px;color:var(--muted)">No sends between</span>
+              <input class="quiet-time-input" type="time" id="quietStart" value="22:00" />
+              <span style="font-size:12px;color:var(--muted)">and</span>
+              <input class="quiet-time-input" type="time" id="quietEnd" value="07:00" />
+            </div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Skip on:</div>
+            <div class="quiet-days" id="quietDays">
+              <button class="quiet-day-btn" data-day="0">Sun</button>
+              <button class="quiet-day-btn" data-day="1">Mon</button>
+              <button class="quiet-day-btn" data-day="2">Tue</button>
+              <button class="quiet-day-btn" data-day="3">Wed</button>
+              <button class="quiet-day-btn" data-day="4">Thu</button>
+              <button class="quiet-day-btn" data-day="5">Fri</button>
+              <button class="quiet-day-btn" data-day="6">Sat</button>
+            </div>
           </div>
 
           <!-- Phase 2: Feedback section -->
@@ -742,6 +929,50 @@
   </div>
   <div class="panel-body" id="panelBody">
     <div class="loading"><div class="spinner"></div> Loading...</div>
+  </div>
+</div>
+
+<!-- EDIT MEMO MODAL (Phase 3B) -->
+<div class="modal-overlay" id="editMemoModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">✏️ Edit Memo</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">Saving creates a new version. Recipients will be notified.</div>
+      </div>
+      <div class="close-btn" id="closeEditMemoBtn">×</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Subject</label>
+        <input class="form-input" id="editMemoSubject" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Content</label>
+        <textarea class="edit-memo-textarea" id="editMemoContent"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Priority</label>
+          <select class="form-select" id="editMemoPriority">
+            <option>Low</option><option>Medium</option><option>High</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Acknowledgement Deadline</label>
+          <input class="form-input" type="datetime-local" id="editMemoDeadline" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Edit Summary <span style="color:var(--muted)">(optional — shown in version history)</span></label>
+        <input class="form-input" id="editMemoSummary" placeholder="e.g. Corrected meeting date" />
+      </div>
+      <div class="error-msg" id="editMemoError"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" id="cancelEditMemoBtn">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="confirmEditMemoBtn">Save New Version</button>
+    </div>
   </div>
 </div>
 
@@ -828,6 +1059,25 @@
           <label class="recipient-check"><input type="checkbox" id="rcpt-gass" checked> 🏢 GASS Personnel</label>
           <label class="recipient-check"><input type="checkbox" id="rcpt-dean"> 📋 Dean / Director</label>
           <label class="recipient-check"><input type="checkbox" id="rcpt-admin"> ⚙️ Admin Staff</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Acknowledgement Deadline <span style="color:var(--muted)">(optional)</span></label>
+          <input class="form-input" type="datetime-local" id="composeDeadline" />
+          <div class="form-hint">Recipients will be highlighted as overdue after this date.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Auto-Reminder</label>
+          <select class="form-select" id="composeAutoReminder">
+            <option value="">No auto-reminder</option>
+            <option value="24h_after">24h after send</option>
+            <option value="48h_after">48h after send</option>
+            <option value="72h_after">72h after send</option>
+            <option value="24h_before">24h before deadline</option>
+            <option value="48h_before">48h before deadline</option>
+          </select>
+          <div class="form-hint">Automatically remind unread recipients.</div>
         </div>
       </div>
     </div>
@@ -1073,6 +1323,7 @@ const pageTitles = {
   notifications: ['Notifications','Activity feed'],
   reports: ['Reports','Tracking & analytics'],
   'memo-detail': ['Memo Detail','Delivery & recipient status'],
+  'calendar': ['Calendar','Memos by date'],
 };
 function showView(name, el) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -1663,11 +1914,16 @@ async function sendMemo(isDraft = false) {
   const btn = document.getElementById('sendMemoBtn');
   btn.textContent = 'Sending...'; btn.disabled = true;
 
+  const deadlineVal = document.getElementById('composeDeadline')?.value;
+  const autoReminder = document.getElementById('composeAutoReminder')?.value || '';
+  const ackDeadline = deadlineVal ? new Date(deadlineVal).toISOString() : null;
+
   const status = isDraft ? 'Draft' : 'Sent';
   const { data: memo, error } = await sb.from('memos').insert({
     subject, content, category, priority, status,
     created_by: currentUser.id,
-    sent_at: isDraft ? null : new Date().toISOString()
+    sent_at: isDraft ? null : new Date().toISOString(),
+    ack_deadline: ackDeadline,
   }).select().single();
 
   if (error) { btn.textContent = 'Send Memo'; btn.disabled = false; showToast('Failed to create memo: ' + error.message, '❌', true); return; }
@@ -1707,11 +1963,34 @@ async function sendMemo(isDraft = false) {
           if (u.email) notifRows.push({ memo_id: memo.id, user_id: u.id, type: 'email', status: emailResult ? 'sent' : 'failed' });
         });
         if (notifRows.length > 0) await sb.from('notifications').insert(notifRows);
+
+        // Phase 3C: create auto-reminder rule if selected
+        if (autoReminder) {
+          const [hoursStr, triggerBase] = autoReminder.split('_');
+          // e.g. "24h_after" → hours=24, type="after_send"
+          // "24h_before" → hours=24, type="before_deadline"
+          const hours = parseInt(hoursStr);
+          const triggerType = triggerBase === 'after' ? 'after_send' : 'before_deadline';
+          if (!isNaN(hours)) {
+            await sb.from('reminder_rules').insert({
+              memo_id: memo.id,
+              trigger_type: triggerType,
+              hours_offset: hours,
+              channel: 'both',
+              enabled: true,
+            });
+          }
+        }
       }
     }
   }
 
   btn.textContent = 'Send Memo'; btn.disabled = false;
+  // Reset deadline + reminder fields
+  const deadlineEl = document.getElementById('composeDeadline');
+  const reminderEl = document.getElementById('composeAutoReminder');
+  if (deadlineEl) deadlineEl.value = '';
+  if (reminderEl) reminderEl.value = '';
   closeCompose();
 
   // Show combined result toast
@@ -1780,6 +2059,7 @@ function openMemoDetail(memoId) {
 function closeMemoDetail() {
   // Navigate back to whichever list view makes sense
   const prevView = detailPreviousView || 'dashboard';
+  if (prevView === 'calendar') { loadCalendar(); }
   const navEl = document.getElementById('nav-' + prevView);
   showView(prevView, navEl);
   if (navEl) navEl.classList.add('active');
@@ -2412,6 +2692,509 @@ loadMemoDetail = async function(memoId) {
 };
 
 
+
+
+// ══════════════════════════════════════
+// CALENDAR VIEW
+// ══════════════════════════════════════
+let calYear  = new Date().getFullYear();
+let calMonth = new Date().getMonth(); // 0-based
+let calAllMemos   = [];   // all memos with dates
+let calSelectedDay = null; // "YYYY-MM-DD"
+
+// Called when navigating to the calendar view
+async function loadCalendar() {
+  // Fetch all memos (admin sees all, others see their own)
+  const isAdmin = currentProfile?.role === 'admin';
+  let memos = [];
+  if (isAdmin) {
+    const { data } = await sb.from('memos')
+      .select('id, subject, priority, status, created_at, sent_at, ack_deadline, ref_number')
+      .order('created_at', { ascending: false });
+    memos = data || [];
+  } else {
+    const { data: recData } = await sb.from('memo_recipients').select('memo_id').eq('user_id', currentUser.id);
+    const ids = (recData || []).map(r => r.memo_id);
+    if (ids.length) {
+      const { data } = await sb.from('memos')
+        .select('id, subject, priority, status, created_at, sent_at, ack_deadline, ref_number')
+        .in('id', ids).order('created_at', { ascending: false });
+      memos = data || [];
+    }
+  }
+  calAllMemos = memos;
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const label = document.getElementById('calMonthLabel');
+  if (label) {
+    label.textContent = new Date(calYear, calMonth, 1).toLocaleDateString('en-PH', { month:'long', year:'numeric' }).toUpperCase();
+  }
+
+  const firstDay  = new Date(calYear, calMonth, 1).getDay();  // 0=Sun
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
+  const today     = new Date();
+  const todayStr  = toDateStr(today);
+
+  // Build a lookup: dateStr -> [memo, ...]
+  const byDate = {};
+  calAllMemos.forEach(m => {
+    // Index by sent_at (or created_at for drafts)
+    const d = m.sent_at || m.created_at;
+    if (d) {
+      const key = d.slice(0, 10);
+      if (!byDate[key]) byDate[key] = [];
+      byDate[key].push({ ...m, _eventType: 'sent' });
+    }
+    // Also index by deadline
+    if (m.ack_deadline) {
+      const dkey = m.ack_deadline.slice(0, 10);
+      if (!byDate[dkey]) byDate[dkey] = [];
+      byDate[dkey].push({ ...m, _eventType: 'deadline' });
+    }
+  });
+
+  const grid = document.getElementById('calGrid');
+  if (!grid) return;
+
+  // Keep day headers (first 7 children), replace rest
+  const headers = Array.from(grid.children).slice(0, 7);
+  grid.innerHTML = '';
+  headers.forEach(h => grid.appendChild(h));
+
+  // Prev-month filler cells
+  for (let i = 0; i < firstDay; i++) {
+    const day = daysInPrev - firstDay + 1 + i;
+    const cell = makeCell(calYear, calMonth - 1, day, byDate, todayStr, calSelectedDay, true);
+    grid.appendChild(cell);
+  }
+
+  // Current month cells
+  for (let d = 1; d <= daysInMonth; d++) {
+    const cell = makeCell(calYear, calMonth, d, byDate, todayStr, calSelectedDay, false);
+    grid.appendChild(cell);
+  }
+
+  // Next-month filler cells to complete the grid row
+  const total = firstDay + daysInMonth;
+  const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
+  for (let d = 1; d <= remaining; d++) {
+    const cell = makeCell(calYear, calMonth + 1, d, byDate, todayStr, calSelectedDay, true);
+    grid.appendChild(cell);
+  }
+
+  // If a day is selected, re-render its detail
+  if (calSelectedDay) renderCalDay(calSelectedDay, byDate);
+  else {
+    // Auto-select today if in current month
+    if (calYear === today.getFullYear() && calMonth === today.getMonth()) {
+      calSelectedDay = todayStr;
+      renderCalDay(todayStr, byDate);
+    }
+  }
+}
+
+function makeCell(year, month, day, byDate, todayStr, selectedDay, otherMonth) {
+  // Normalise month overflow
+  const d = new Date(year, month, day);
+  const key = toDateStr(d);
+  const memos = byDate[key] || [];
+
+  const cell = document.createElement('div');
+  cell.className = 'cal-cell' +
+    (key === todayStr    ? ' cal-today'        : '') +
+    (otherMonth          ? ' cal-other-month'  : '') +
+    (key === selectedDay ? ' cal-selected'     : '');
+  cell.dataset.date = key;
+
+  const numEl = document.createElement('div');
+  numEl.className = 'cal-date-num';
+  numEl.textContent = day;
+  cell.appendChild(numEl);
+
+  // Show up to 3 memo dots
+  const shown = memos.slice(0, 3);
+  shown.forEach(m => {
+    const dot = document.createElement('div');
+    const pTag = m._eventType === 'deadline' ? 'p-High' : ('p-' + (m.priority || 'Low'));
+    const prefix = m._eventType === 'deadline' ? '⚑ ' : '';
+    dot.className = 'cal-dot ' + pTag;
+    dot.textContent = prefix + (m.subject || 'Memo');
+    cell.appendChild(dot);
+  });
+  if (memos.length > 3) {
+    const more = document.createElement('div');
+    more.className = 'cal-overflow';
+    more.textContent = '+' + (memos.length - 3) + ' more';
+    cell.appendChild(more);
+  }
+
+  cell.addEventListener('click', () => {
+    calSelectedDay = key;
+    // Rebuild byDate for renderCalDay
+    const bd = {};
+    calAllMemos.forEach(m => {
+      const sd = m.sent_at || m.created_at;
+      if (sd) { const k = sd.slice(0,10); if (!bd[k]) bd[k]=[]; bd[k].push({...m,_eventType:'sent'}); }
+      if (m.ack_deadline) { const dk = m.ack_deadline.slice(0,10); if (!bd[dk]) bd[dk]=[]; bd[dk].push({...m,_eventType:'deadline'}); }
+    });
+    // Update selected styling
+    document.querySelectorAll('.cal-cell').forEach(c => c.classList.remove('cal-selected'));
+    cell.classList.add('cal-selected');
+    renderCalDay(key, bd);
+  });
+
+  return cell;
+}
+
+function renderCalDay(dateStr, byDate) {
+  const titleEl = document.getElementById('calDetailTitle');
+  const listEl  = document.getElementById('calDetailList');
+  if (!titleEl || !listEl) return;
+
+  const d = new Date(dateStr + 'T00:00:00');
+  const label = d.toLocaleDateString('en-PH', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+  const memos = byDate[dateStr] || [];
+
+  titleEl.textContent = label + (memos.length ? ' — ' + memos.length + ' item' + (memos.length > 1 ? 's' : '') : '');
+
+  if (!memos.length) {
+    listEl.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:8px 0">No memos sent or due on this day.</div>';
+    return;
+  }
+
+  const isAdmin = currentProfile?.role === 'admin';
+  listEl.innerHTML = memos.map(m => {
+    const pClass = m.priority === 'High' ? 'p-high' : m.priority === 'Medium' ? 'p-med' : 'p-low';
+    const sClass = m.status === 'Sent' ? 'pill-sent' : m.status === 'Pending' ? 'pill-pending' : 'pill-draft';
+    const timeStr = m._eventType === 'deadline'
+      ? new Date(m.ack_deadline).toLocaleTimeString('en-PH', { hour:'2-digit', minute:'2-digit' }) + ' deadline'
+      : m.sent_at
+        ? new Date(m.sent_at).toLocaleTimeString('en-PH', { hour:'2-digit', minute:'2-digit' }) + ' sent'
+        : 'Draft';
+    const dot = m._eventType === 'deadline'
+      ? '<div class="cal-deadline-dot deadline"></div>'
+      : '<div class="cal-deadline-dot sent"></div>';
+    return '<div class="cal-memo-row" data-memo-id="' + m.id + '" data-event-type="' + m._eventType + '">' +
+      dot +
+      '<div style="flex:1;min-width:0">' +
+        '<div class="cal-memo-subject">' + (m.subject || 'Untitled') + '</div>' +
+        '<div class="cal-memo-meta">' +
+          (m.ref_number ? m.ref_number + ' · ' : '') +
+          '<span class="priority-tag ' + pClass + '" style="font-size:10px;padding:1px 6px">' + (m.priority||'').toUpperCase().slice(0,3) + '</span>' +
+          ' · <span class="status-pill ' + sClass + '" style="font-size:10px;padding:1px 7px">' + m.status + '</span>' +
+          ' · ' + timeStr +
+          (m._eventType === 'deadline' ? ' <span style="color:var(--danger);font-weight:600">(DEADLINE)</span>' : '') +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  // Wire clicks — admin opens detail view, others open panel
+  listEl.querySelectorAll('.cal-memo-row').forEach(row => {
+    row.addEventListener('click', () => {
+      if (isAdmin) {
+        detailPreviousView = 'calendar';
+        openMemoDetail(row.dataset.memoId);
+      } else {
+        openPanel(row.dataset.memoId);
+      }
+    });
+  });
+}
+
+function calPrev() { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } calSelectedDay = null; renderCalendar(); }
+function calNext() { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } calSelectedDay = null; renderCalendar(); }
+function calGoToday() { calYear = new Date().getFullYear(); calMonth = new Date().getMonth(); calSelectedDay = toDateStr(new Date()); renderCalendar(); }
+
+function toDateStr(d) {
+  return d.getFullYear() + '-' +
+    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+    String(d.getDate()).padStart(2, '0');
+}
+
+// ══════════════════════════════════════
+// PHASE 3A — ACKNOWLEDGEMENT DEADLINES
+// ══════════════════════════════════════
+
+function renderDeadlineBadge(memo) {
+  const el = document.getElementById('detailDeadlineBadge');
+  if (!el) return;
+  if (!memo?.ack_deadline) { el.style.display = 'none'; return; }
+
+  const deadline = new Date(memo.ack_deadline);
+  const now      = new Date();
+  const diffMs   = deadline - now;
+  const diffH    = diffMs / 36e5;
+
+  let cls, label;
+  if (diffMs < 0) {
+    cls   = 'deadline-overdue';
+    const daysAgo = Math.floor(-diffMs / 864e5);
+    label = '🔴 OVERDUE — deadline was ' + deadline.toLocaleDateString('en-PH', { month:'short', day:'numeric', year:'numeric' }) + ' (' + daysAgo + 'd ago)';
+  } else if (diffH < 48) {
+    cls   = 'deadline-soon';
+    const hLeft = Math.floor(diffH);
+    label = '⚠️ Deadline in ' + (hLeft < 1 ? '<1' : hLeft) + 'h — ' + deadline.toLocaleString('en-PH', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+  } else {
+    cls   = 'deadline-ok';
+    label = '📅 Deadline: ' + deadline.toLocaleString('en-PH', { month:'short', day:'numeric', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  }
+
+  el.style.display = '';
+  el.innerHTML = '<span class="deadline-badge ' + cls + '">' + label + '</span>';
+}
+
+// Highlight overdue rows in recipient table
+function applyOverdueHighlighting() {
+  if (!detailMemo?.ack_deadline) return;
+  const overdue = new Date(detailMemo.ack_deadline) < new Date();
+  if (!overdue) return;
+  document.querySelectorAll('#detailRecipientBody tr[data-uid]').forEach(row => {
+    const uid = row.dataset.uid;
+    const rcpt = detailRecipients.find(r => r.user_id === uid);
+    if (rcpt && !rcpt.acked) row.classList.add('row-overdue');
+  });
+}
+
+// ══════════════════════════════════════
+// PHASE 3B — MEMO VERSIONING
+// ══════════════════════════════════════
+let editingMemoId = null;
+
+function openEditMemo() {
+  if (!detailMemo) return;
+  editingMemoId = detailMemoId;
+  document.getElementById('editMemoSubject').value  = detailMemo.subject || '';
+  document.getElementById('editMemoContent').value  = detailMemo.content || '';
+  document.getElementById('editMemoSummary').value  = '';
+  document.getElementById('editMemoError').textContent = '';
+  const pri = document.getElementById('editMemoPriority');
+  if (pri) pri.value = detailMemo.priority || 'Medium';
+  const dl = document.getElementById('editMemoDeadline');
+  if (dl && detailMemo.ack_deadline) {
+    // Convert ISO to datetime-local format
+    dl.value = detailMemo.ack_deadline.slice(0, 16);
+  } else if (dl) { dl.value = ''; }
+  document.getElementById('editMemoModal').classList.add('open');
+}
+
+function closeEditMemo() {
+  document.getElementById('editMemoModal').classList.remove('open');
+  editingMemoId = null;
+}
+
+async function confirmEditMemo() {
+  const subject  = document.getElementById('editMemoSubject').value.trim();
+  const content  = document.getElementById('editMemoContent').value.trim();
+  const priority = document.getElementById('editMemoPriority').value;
+  const summary  = document.getElementById('editMemoSummary').value.trim();
+  const dlVal    = document.getElementById('editMemoDeadline').value;
+  const errEl    = document.getElementById('editMemoError');
+  const btn      = document.getElementById('confirmEditMemoBtn');
+
+  if (!subject || !content) { errEl.textContent = 'Subject and content are required.'; return; }
+  errEl.textContent = '';
+  btn.textContent = 'Saving...'; btn.disabled = true;
+
+  // 1. Save current version snapshot BEFORE updating
+  const { data: currentMemo } = await sb.from('memos').select('subject, content, priority, version').eq('id', editingMemoId).single();
+  const currentVersion = currentMemo?.version || 1;
+
+  await sb.from('memo_versions').insert({
+    memo_id:     editingMemoId,
+    version_num: currentVersion,
+    subject:     currentMemo?.subject,
+    content:     currentMemo?.content,
+    priority:    currentMemo?.priority,
+    saved_by:    currentUser.id,
+    summary:     summary || 'Version ' + currentVersion,
+  });
+
+  // 2. Update memo with new content + bump version
+  const newVersion = currentVersion + 1;
+  const ackDeadline = dlVal ? new Date(dlVal).toISOString() : null;
+  const { error } = await sb.from('memos').update({
+    subject, content, priority,
+    ack_deadline: ackDeadline,
+    version: newVersion,
+  }).eq('id', editingMemoId);
+
+  if (error) { errEl.textContent = 'Failed: ' + error.message; btn.textContent = 'Save New Version'; btn.disabled = false; return; }
+
+  // 3. Log audit
+  await sb.from('memo_audit_logs').insert({
+    memo_id: editingMemoId,
+    action_type: 'edit',
+    performed_by: currentUser.id,
+    metadata: { previous_version: currentVersion, new_version: newVersion, summary: summary || '' },
+  });
+
+  btn.textContent = 'Save New Version'; btn.disabled = false;
+  closeEditMemo();
+  showToast('Memo updated to v' + newVersion + '.', '✏️');
+  await loadMemoDetail(editingMemoId);
+}
+
+async function loadVersionHistory() {
+  const { data: versions } = await sb.from('memo_versions')
+    .select('*, profiles!memo_versions_saved_by_fkey(full_name)')
+    .eq('memo_id', detailMemoId)
+    .order('version_num', { ascending: false });
+
+  const section = document.getElementById('detailVersionSection');
+  const list    = document.getElementById('detailVersionList');
+  const count   = document.getElementById('detailVersionCount');
+  if (!section || !list) return;
+
+  if (!versions || !versions.length) { section.style.display = 'none'; return; }
+
+  section.style.display = '';
+  if (count) count.textContent = '(' + versions.length + ' saved)';
+
+  list.innerHTML = versions.map(v => {
+    const time = new Date(v.created_at).toLocaleString('en-PH', { month:'short', day:'numeric', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    return '<div class="version-history-item">' +
+      '<div class="version-num">v' + v.version_num + '</div>' +
+      '<div class="version-meta">' +
+        '<div class="version-subject">' + (v.subject || '—') + '</div>' +
+        '<div class="version-info">Saved by ' + (v.profiles?.full_name || 'Admin') + ' · ' + time + '</div>' +
+        (v.summary ? '<div class="version-diff">' + v.summary + '</div>' : '') +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function toggleVersionHistory() {
+  const list    = document.getElementById('detailVersionList');
+  const chevron = document.getElementById('detailVersionChevron');
+  if (!list) return;
+  const open = list.style.display !== 'none';
+  list.style.display    = open ? 'none' : 'block';
+  if (chevron) chevron.textContent = open ? '▼' : '▲';
+}
+
+// ══════════════════════════════════════
+// PHASE 3C — REMINDER RULES
+// ══════════════════════════════════════
+let detailRules = [];
+
+async function loadReminderRules() {
+  if (currentProfile?.role !== 'admin') return;
+  const { data: rules } = await sb.from('reminder_rules')
+    .select('*').eq('memo_id', detailMemoId).order('created_at');
+  detailRules = rules || [];
+  renderReminderRules();
+}
+
+function renderReminderRules() {
+  const list = document.getElementById('detailRulesList');
+  if (!list) return;
+  if (!detailRules.length) {
+    list.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:4px 0 8px">No reminder rules. Add one below.</div>';
+    return;
+  }
+  list.innerHTML = detailRules.map(r => {
+    const trigLabel = r.trigger_type === 'after_send' ? 'after send' : 'before deadline';
+    const chLabel   = { email:'Email only', sms:'SMS only', both:'Email + SMS' }[r.channel] || r.channel;
+    const lastRun   = r.last_run_at ? 'Last run: ' + new Date(r.last_run_at).toLocaleString('en-PH', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }) : 'Not yet run';
+    const runCount  = r.run_count ? r.run_count + 'x fired' : '';
+    return '<div class="rule-item' + (r.enabled ? '' : ' rule-disabled') + '" data-rule-id="' + r.id + '">' +
+      '<div style="flex:1">' +
+        '<div class="rule-label">⏰ ' + r.hours_offset + 'h ' + trigLabel + ' — ' + chLabel + '</div>' +
+        '<div class="rule-sub">' + lastRun + (runCount ? ' · ' + runCount : '') + '</div>' +
+      '</div>' +
+      '<button class="btn btn-sm btn-danger" onclick="deleteRule(\'' + r.id + '\')" style="padding:3px 8px;font-size:11px">×</button>' +
+      '<button class="rule-toggle ' + (r.enabled ? 'on' : 'off') + '" data-rule-id="' + r.id + '" onclick="toggleRule(\'' + r.id + '\', ' + !r.enabled + ')"></button>' +
+    '</div>';
+  }).join('');
+}
+
+async function addReminderRule() {
+  const triggerType = document.getElementById('rulesTriggerType').value;
+  const hours       = parseInt(document.getElementById('rulesHours').value);
+  const channel     = document.getElementById('rulesChannel').value;
+  if (!hours || hours < 1) { showToast('Enter a valid number of hours.', '⚠️', true); return; }
+  if (triggerType === 'before_deadline' && !detailMemo?.ack_deadline) {
+    showToast('Set an acknowledgement deadline first.', '⚠️', true); return;
+  }
+  const { error } = await sb.from('reminder_rules').insert({
+    memo_id: detailMemoId, trigger_type: triggerType,
+    hours_offset: hours, channel, enabled: true,
+  });
+  if (error) { showToast('Failed: ' + error.message, '❌', true); return; }
+  showToast('Rule added.', '⏰');
+  await loadReminderRules();
+}
+
+async function toggleRule(ruleId, newEnabled) {
+  await sb.from('reminder_rules').update({ enabled: newEnabled }).eq('id', ruleId);
+  await loadReminderRules();
+}
+
+async function deleteRule(ruleId) {
+  await sb.from('reminder_rules').delete().eq('id', ruleId);
+  detailRules = detailRules.filter(r => r.id !== ruleId);
+  renderReminderRules();
+  showToast('Rule removed.', '✅');
+}
+
+// ══════════════════════════════════════
+// PHASE 3D — QUIET HOURS
+// ══════════════════════════════════════
+let quietSkipDays = new Set(); // day numbers 0-6 to skip
+
+async function loadQuietHours() {
+  if (currentProfile?.role !== 'admin') return;
+  const { data } = await sb.from('quiet_hours_config').select('*').limit(1).maybeSingle();
+  if (!data) return;
+
+  const enabledEl = document.getElementById('quietEnabled');
+  const startEl   = document.getElementById('quietStart');
+  const endEl     = document.getElementById('quietEnd');
+  if (enabledEl) enabledEl.checked = !!data.enabled;
+  if (startEl)   startEl.value     = data.start_time || '22:00';
+  if (endEl)     endEl.value       = data.end_time   || '07:00';
+
+  quietSkipDays = new Set(data.skip_days || []);
+  document.querySelectorAll('.quiet-day-btn').forEach(btn => {
+    const day = parseInt(btn.dataset.day);
+    btn.classList.toggle('active', quietSkipDays.has(day));
+  });
+}
+
+async function saveQuietHours() {
+  const enabled   = document.getElementById('quietEnabled')?.checked || false;
+  const startTime = document.getElementById('quietStart')?.value || '22:00';
+  const endTime   = document.getElementById('quietEnd')?.value   || '07:00';
+  const skipDays  = [...quietSkipDays];
+
+  // Upsert — we store a single row keyed by a fixed id
+  const { error } = await sb.from('quiet_hours_config').upsert({
+    id: 1, enabled, start_time: startTime, end_time: endTime, skip_days: skipDays,
+  }, { onConflict: 'id' });
+
+  if (error) { showToast('Failed to save: ' + error.message, '❌', true); return; }
+  showToast('Quiet hours saved.', '🌙');
+}
+
+// ══════════════════════════════════════
+// PHASE 3 — HOOK INTO loadMemoDetail
+// ══════════════════════════════════════
+const _origLoadMemoDetailP3 = loadMemoDetail;
+loadMemoDetail = async function(memoId) {
+  await _origLoadMemoDetailP3(memoId);
+  // Render deadline badge (detailMemo is now set)
+  renderDeadlineBadge(detailMemo);
+  // Apply overdue row highlights (detailRecipients now populated)
+  setTimeout(applyOverdueHighlighting, 50);
+  // Load version history, rules, quiet hours
+  await Promise.all([loadVersionHistory(), loadReminderRules(), loadQuietHours()]);
+};
+
+
 // ══════════════════════════════════════
 // TEST NOTIFICATION
 // ══════════════════════════════════════
@@ -2500,6 +3283,7 @@ function bindEvents() {
       const view = el.dataset.view;
       showView(view, el);
       if (view === 'recipients') loadRecipients();
+      if (view === 'calendar')   loadCalendar();
     });
   });
 
@@ -2591,6 +3375,44 @@ function bindEvents() {
   // Timeline modal close
   const closeTimelineBtn = document.getElementById('closeTimelineBtn');
   if (closeTimelineBtn) closeTimelineBtn.addEventListener('click', closeTimeline);
+
+  // ── Calendar nav ──
+  const calPrevBtn  = document.getElementById('calPrevBtn');
+  const calNextBtn  = document.getElementById('calNextBtn');
+  const calTodayBtn = document.getElementById('calTodayBtn');
+  if (calPrevBtn)  calPrevBtn.addEventListener('click', calPrev);
+  if (calNextBtn)  calNextBtn.addEventListener('click', calNext);
+  if (calTodayBtn) calTodayBtn.addEventListener('click', calGoToday);
+
+  // ── Phase 3B: Edit Memo ──
+  const editMemoBtn         = document.getElementById('editMemoBtn');
+  const closeEditMemoBtn    = document.getElementById('closeEditMemoBtn');
+  const cancelEditMemoBtn   = document.getElementById('cancelEditMemoBtn');
+  const confirmEditMemoBtn  = document.getElementById('confirmEditMemoBtn');
+  const detailVersionToggle = document.getElementById('detailVersionToggle');
+  if (editMemoBtn)        editMemoBtn.addEventListener('click', openEditMemo);
+  if (closeEditMemoBtn)   closeEditMemoBtn.addEventListener('click', closeEditMemo);
+  if (cancelEditMemoBtn)  cancelEditMemoBtn.addEventListener('click', closeEditMemo);
+  if (confirmEditMemoBtn) confirmEditMemoBtn.addEventListener('click', confirmEditMemo);
+  if (detailVersionToggle) detailVersionToggle.addEventListener('click', toggleVersionHistory);
+
+  // ── Phase 3C: Reminder Rules ──
+  const addRuleBtn   = document.getElementById('addRuleBtn');
+  const saveRulesBtn = document.getElementById('saveRulesBtn');
+  if (addRuleBtn)   addRuleBtn.addEventListener('click', addReminderRule);
+  if (saveRulesBtn) saveRulesBtn.addEventListener('click', loadReminderRules); // refresh
+
+  // ── Phase 3D: Quiet Hours ──
+  const saveQuietBtn = document.getElementById('saveQuietBtn');
+  if (saveQuietBtn) saveQuietBtn.addEventListener('click', saveQuietHours);
+  document.querySelectorAll('.quiet-day-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const day = parseInt(btn.dataset.day);
+      if (quietSkipDays.has(day)) quietSkipDays.delete(day);
+      else quietSkipDays.add(day);
+      btn.classList.toggle('active', quietSkipDays.has(day));
+    });
+  });
 
   // ── Phase 2: Add Recipients ──
   const addRecipientsBtn  = document.getElementById('addRecipientsBtn');
